@@ -1,0 +1,19 @@
+# Executable
+
+lemipc
+lemipc_debug
+
+# Libraries
+
+*.so
+*.a
+*.dylib
+
+# Compiled
+
+*.o
+*.d
+
+# Editor
+
+/.vscode
