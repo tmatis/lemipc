@@ -12,7 +12,7 @@
  * @param args the arguments
  * @param printf_buffer the printf buffer
  */
-static void _printf_wrapper(const char *format, va_list args, printf_buffer_t *printf_buffer)
+void printf_wrapper(const char *format, va_list args, printf_buffer_t *printf_buffer)
 {
     while (*format)
     {
@@ -53,7 +53,7 @@ int ft_printf(const char *format, ...)
         return (-1);
     va_list args;
     va_start(args, format);
-    _printf_wrapper(format, args, &printf_buffer);
+    printf_wrapper(format, args, &printf_buffer);
     va_end(args);
     buffer_printf_destroy(&printf_buffer);
     return (printf_buffer.total_len);
@@ -76,7 +76,7 @@ int ft_dprintf(int fd, const char *format, ...)
         return (-1);
     va_list args;
     va_start(args, format);
-    _printf_wrapper(format, args, &printf_buffer);
+    printf_wrapper(format, args, &printf_buffer);
     va_end(args);
     buffer_printf_destroy(&printf_buffer);
     return (printf_buffer.total_len);
@@ -99,7 +99,7 @@ int ft_snprintf(char *str, size_t size, const char *format, ...)
         return (-1);
     va_list args;
     va_start(args, format);
-    _printf_wrapper(format, args, &printf_buffer);
+    printf_wrapper(format, args, &printf_buffer);
     ft_strlcpy(str, printf_buffer.str, size);
     va_end(args);
     buffer_printf_destroy(&printf_buffer);
@@ -125,7 +125,7 @@ int ft_asprintf(char **str, const char *format, ...)
         return (-1);
     va_list args;
     va_start(args, format);
-    _printf_wrapper(format, args, &printf_buffer);
+    printf_wrapper(format, args, &printf_buffer);
     *str = malloc(sizeof(char) * (printf_buffer.len + 1));
     if (*str == NULL)
     {

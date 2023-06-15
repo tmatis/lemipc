@@ -134,4 +134,14 @@ int ft_memcmp(const void *s1, const void *s2, size_t n);
  */
 const char *ft_strerror(int errnum);
 
+/**
+ * @brief Set bytes in memory
+ * 
+ * @param s the memory area to set
+ * @param c the byte to set
+ * @param n the number of bytes to set
+ * @return void* a pointer to the memory area
+ */
+void *ft_memset(void *s, int c, size_t n);
+
 #endif

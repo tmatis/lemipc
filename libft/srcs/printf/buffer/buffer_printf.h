@@ -3,27 +3,11 @@
 
 #include <stdio.h>
 #include <bool_t.h>
+#include <ft_printf.h>
 
 #define BUFFER_PRINTF_DEFAULT_CAPACITY 1024
 #define BUFFER_PRINTF_GROWTH_FACTOR 2
 #define BUFFER_WRITE_THRESHOLD 1024
-
-typedef enum {
-    PRINTF_WRITE_MODE,
-    PRINTF_LEN_MODE,
-    PRINTF_BUFFER_MODE
-} buffer_mode_t;
-
-typedef struct
-{
-    char *str;
-    size_t len;
-    size_t total_len;
-    size_t capacity;
-    buffer_mode_t mode;
-    int fd;
-    int error_number;
-} printf_buffer_t;
 
 /**
  * @brief Initialize a printf_buffer_t

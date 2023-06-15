@@ -23,7 +23,8 @@ SRCS +=	string/ft_strlen.c \
 		string/ft_strtok.c \
 		string/ft_strdup.c \
 		string/ft_memcmp.c \
-		string/ft_strerror.c
+		string/ft_strerror.c \
+		string/ft_memset.c
 
 # char files
 
@@ -59,6 +60,10 @@ SRCS +=	printf/buffer/buffer_printf.c \
 
 SRCS += units/units.c \
 		units/record_output.c
+
+# log files
+
+SRCS += logs/ft_logs.c
 
 OBJS := $(addprefix $(OBJDIR)/, $(SRCS:.c=.o))
 
