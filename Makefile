@@ -17,7 +17,10 @@ INCDIR := includes
 
 SRCS_MAIN := main.c
 
-SRCS :=
+SRCS += board/board_create.c \
+		board/board_get.c \
+		board/board_lock.c \
+		board/board_open.c
 
 OBJS_MAIN_RELEASE := $(addprefix $(OBJSDIR_RELEASE)/,$(SRCS_MAIN:.c=.o))
 OBJS_MAIN_DEBUG := $(addprefix $(OBJSDIR_DEBUG)/,$(SRCS_MAIN:.c=.o))
@@ -51,12 +54,12 @@ unit: $(LIBFT) $(OBJS_DEBUG)
 
 -include $(DEPS_RELEASE)
 $(OBJSDIR_RELEASE)/%.o: $(SRCSDIR)/%.c
-	@mkdir -p $(OBJSDIR_RELEASE)
+	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) -I $(INCDIR) -I $(LIBFTINC) $(DFLAGS) -c $< -o $@
 
 -include $(DEPS_DEBUG)
 $(OBJSDIR_DEBUG)/%.o: $(SRCSDIR)/%.c
-	@mkdir -p $(OBJSDIR_DEBUG)
+	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) -I $(INCDIR) -I $(LIBFTINC) $(DFLAGS) -c $< -o $@
 
 clean:
