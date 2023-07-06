@@ -20,7 +20,8 @@ SRCS_MAIN := main.c
 SRCS += board/board_create.c \
 		board/board_get.c \
 		board/board_lock.c \
-		board/board_open.c
+		board/board_open.c \
+		board/board_disconnect.c
 
 OBJS_MAIN_RELEASE := $(addprefix $(OBJSDIR_RELEASE)/,$(SRCS_MAIN:.c=.o))
 OBJS_MAIN_DEBUG := $(addprefix $(OBJSDIR_DEBUG)/,$(SRCS_MAIN:.c=.o))

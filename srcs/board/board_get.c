@@ -26,14 +26,7 @@ static void touch(const char *path)
     close(fd);
 }
 
-static int player_attribute_id(board_instance_t *board_instance)
-{
-    int player_id = board_instance->board->players_count;
-    board_instance->board->players_count++;
-    return (player_id);
-}
-
-board_instance_t *board_get(void)
+board_instance_t *board_get(bool_t allow_creation)
 {
     touch(IPC_PATH);
     key_t key = ftok(IPC_PATH, IPC_KEY);
@@ -49,7 +42,15 @@ board_instance_t *board_get(void)
     }
     board_instance_t *board_instance;
     int sem_id = semget(key, 1, 0);
-    if (sem_id == -1)
+    if (sem_id == -1 && !allow_creation)
+    {
+        ft_log(
+            LOG_LEVEL_FATAL,
+            "open_board",
+            "Board does not exist, and creation is not allowed");
+        exit(EXIT_FAILURE);
+    }
+    else if (sem_id == -1)
     {
         ft_log(
             LOG_LEVEL_INFO,
@@ -57,10 +58,15 @@ board_instance_t *board_get(void)
             "Board does not exist, creating it...");
         board_instance = board_create(key);
     } else {
+        ft_log(
+            LOG_LEVEL_INFO,
+            "open_board",
+            "Board exists, opening it...");
         board_instance = board_open(key);
         board_lock(board_instance);
     }
-    board_instance->player_id = player_attribute_id(board_instance);
+    board_instance->player_id = PLAYER_NO_ID;
+    board_instance->board->clients_connected++;
     board_unlock(board_instance);
     return (board_instance);
 }

@@ -42,6 +42,7 @@ board_instance_t *board_create(key_t key)
     }
     board_instance->board = board;
     board_instance->sem_id = semget(key, 1, IPC_CREAT | IPC_EXCL | 0644);
+    board_instance->shm_id = shm_id;
     if (board_instance->sem_id == -1)
     {
         ft_log(
@@ -62,8 +63,12 @@ board_instance_t *board_create(key_t key)
             ft_strerror(errno));
         exit(EXIT_FAILURE);
     }
-    board_instance->board->players_count = 0;
+    board_instance->board->clients_connected = 0;
+    board_instance->board->players_index = 0;
     for (int i = 0; i < BOARD_SIZE * BOARD_SIZE; i++)
-        board_instance->board->slots[i] = EMPTY_CELL;
+    {
+        board_instance->board->slots[i].player_id = EMPTY_CELL;
+        board_instance->board->slots[i].team_id = EMPTY_CELL;
+    }
     return (board_instance);
 }

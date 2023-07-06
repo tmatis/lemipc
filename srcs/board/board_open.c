@@ -14,7 +14,7 @@ board_instance_t *board_open(key_t key)
     {
         ft_log(
             LOG_LEVEL_FATAL,
-            "open_board",
+            "board_open",
             "could not get shared memory segment " C_BOLD "(" C_YELLOW "%#x" C_RESET "): %s",
             key,
             ft_strerror(errno));
@@ -25,7 +25,7 @@ board_instance_t *board_open(key_t key)
     {
         ft_log(
             LOG_LEVEL_FATAL,
-            "open_board",
+            "board_open",
             "could not attach shared memory segment " C_BOLD "(" C_YELLOW "%#x" C_RESET "): %s",
             key,
             ft_strerror(errno));
@@ -36,18 +36,19 @@ board_instance_t *board_open(key_t key)
     {
         ft_log(
             LOG_LEVEL_FATAL,
-            "open_board",
+            "board_open",
             "could not allocate memory for board instance: %s",
             ft_strerror(errno));
         exit(EXIT_FAILURE);
     }
     board_instance->board = board;
     board_instance->sem_id = semget(key, 1, 0);
+    board_instance->shm_id = shm_id;
     if (board_instance->sem_id == -1)
     {
         ft_log(
             LOG_LEVEL_FATAL,
-            "open_board",
+            "board_open",
             "could not get semaphore " C_BOLD "(" C_YELLOW "%#x" C_RESET "): %s",
             key,
             ft_strerror(errno));
