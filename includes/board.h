@@ -5,35 +5,36 @@
 #include <stdint.h>
 
 #define BOARD_SIZE 30
-#define MAX_PLAYERS 30
 #define EMPTY_CELL -1
+#define SLOT_COUNT BOARD_SIZE *BOARD_SIZE
 
 #define PLAYER_NO_ID -1
-
 
 #define IPC_PATH "/tmp/lemipc-tmatis"
 
 #define IPC_KEY 0x0
 
-typedef struct {
+typedef struct
+{
     int8_t player_id;
     int8_t team_id;
 } player_t;
 
-typedef struct {
+typedef struct
+{
     uint8_t clients_connected;
     uint8_t players_index;
     player_t slots[BOARD_SIZE * BOARD_SIZE];
 } board_t;
 
-typedef struct {
+typedef struct
+{
     board_t *board;
     int sem_id;
     int shm_id;
-    int player_id;
-    int player_team;
     int x;
     int y;
+    player_t player;
 } board_instance_t;
 
 board_instance_t *board_get(bool_t allow_creation);
