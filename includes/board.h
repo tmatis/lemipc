@@ -16,14 +16,14 @@
 
 typedef struct
 {
-    int8_t player_id;
-    int8_t team_id;
+    int player_id;
+    int team_id;
 } player_t;
 
 typedef struct
 {
-    uint8_t clients_connected;
-    uint8_t players_index;
+    int clients_connected;
+    int players_index;
     player_t slots[BOARD_SIZE * BOARD_SIZE];
 } board_t;
 

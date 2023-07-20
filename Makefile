@@ -3,8 +3,10 @@ CC := cc
 CFLAGS := -Wall -Wextra -Werror
 LIBFTDIR := libft
 LIBFT := $(LIBFTDIR)/libft.a
+LIBMLXDIR := minilibx
+LIBMLX	= minilibx/libmlx.a
 LIBFTINC := $(LIBFTDIR)/includes
-LIBS := -L $(LIBFTDIR) -lft
+LIBS := -L $(LIBFTDIR) -lft -L $(LIBMLXDIR) -lmlx -lXext -lX11 -lm 
 
 ifneq ($(filter debug redebug,$(MAKECMDGOALS)),)
 	CFLAGS += -g
@@ -22,6 +24,9 @@ SRCS += board/board_create.c \
 		board/board_lock.c \
 		board/board_open.c \
 		board/board_disconnect.c
+
+SRCS += pawn/pawn_get.c \
+		pawn/pawn_join_board.c
 
 OBJS_MAIN_RELEASE := $(addprefix $(OBJSDIR_RELEASE)/,$(SRCS_MAIN:.c=.o))
 OBJS_MAIN_DEBUG := $(addprefix $(OBJSDIR_DEBUG)/,$(SRCS_MAIN:.c=.o))
@@ -42,15 +47,18 @@ all: $(NAME)
 $(LIBFT):
 	$(MAKE) -C $(LIBFTDIR)
 
-$(NAME): $(LIBFT) $(OBJS_RELEASE) $(OBJS_MAIN_RELEASE)
+$(LIBMLX):
+	$(MAKE) -C $(LIBMLXDIR)
+
+$(NAME): $(LIBFT) $(LIBMLX) $(OBJS_RELEASE) $(OBJS_MAIN_RELEASE)
 	$(CC) $(CFLAGS) -o $(NAME) $(OBJS_RELEASE) $(OBJS_MAIN_RELEASE) $(LIBS)
 
-$(NAME_DEBUG): $(LIBFT) $(OBJS_DEBUG) $(OBJS_MAIN_DEBUG)
+$(NAME_DEBUG): $(LIBFT) $(LIBMLX) $(OBJS_DEBUG) $(OBJS_MAIN_DEBUG)
 	$(CC) $(CFLAGS) -o $(NAME_DEBUG) $(OBJS_DEBUG) $(OBJS_MAIN_DEBUG) $(LIBS)
 
 debug: $(NAME_DEBUG)
 
-unit: $(LIBFT) $(OBJS_DEBUG)
+unit: $(LIBFT) $(LIBMLX) $(OBJS_DEBUG)
 	libft/scripts/car.sh $(OBJS_DEBUG)
 
 -include $(DEPS_RELEASE)
@@ -65,6 +73,7 @@ $(OBJSDIR_DEBUG)/%.o: $(SRCSDIR)/%.c
 
 clean:
 	make -C $(LIBFTDIR) clean
+	make -C $(LIBMLXDIR) clean
 	rm -rf .build
 
 fclean: clean

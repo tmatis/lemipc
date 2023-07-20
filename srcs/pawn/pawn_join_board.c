@@ -2,7 +2,8 @@
 #include <bool_t.h>
 #include <ft_logs.h>
 #include <stdlib.h>
-
+#include <stdio.h>
+#include <time.h>
 typedef struct
 {
     int8_t x;
@@ -11,13 +12,14 @@ typedef struct
 
 /**
  * @brief Find a random free slot on the board
- * 
+ *
  * @param board_instance The board instance
  * @return coord_t The coordinates of the free slot
  */
 static coord_t find_free_slot(board_instance_t *board_instance)
 {
     coord_t coord = {0, 0};
+    srand(time(NULL));
 
     while (true)
     {
@@ -44,18 +46,18 @@ bool_t pawn_join_board(board_instance_t *board_instance)
         board_unlock(board_instance);
         ft_log(
             LOG_LEVEL_ERROR,
-            "pawn_place",
+            "pawn_join_board",
             "no more slots available");
-        return (true);
+        return true;
     }
 
     coord_t coord = find_free_slot(board_instance);
     board_instance->x = coord.x;
     board_instance->y = coord.y;
     player_t *slot = &board_instance->board->slots[coord.x + coord.y * BOARD_SIZE];
-    
+
     slot->player_id = ++board_instance->board->players_index;
     slot->team_id = board_instance->player.team_id;
-
-    
+    board_unlock(board_instance);
+    return false;
 }
