@@ -11,4 +11,4 @@
  */
 bool_t pawn_join_board(board_instance_t *board_instance);
 void pawn_leave_board(board_instance_t *board_instance);
-player_t pawn_get(board_instance_t *board_instance, uint8_t x, uint8_t y);
+player_t *pawn_get(board_instance_t *board_instance, int x, int y);

@@ -5,10 +5,12 @@
 #include <ft_logs.h>
 #include <stdlib.h>
 #include <errno.h>
+#include <ft_printf.h>
 
-board_instance_t *board_create(key_t key)
+board_instance_t *board_create(key_t key, int slot_count)
 {
-    int shm_id = shmget(key, sizeof(board_t), IPC_CREAT | IPC_EXCL | 0644);
+    size_t board_size = board_compute_size(slot_count);
+    int shm_id = shmget(key, board_size, IPC_CREAT | IPC_EXCL | 0644);
     if (shm_id == -1)
     {
         ft_log(
@@ -30,6 +32,7 @@ board_instance_t *board_create(key_t key)
             ft_strerror(errno));
         exit(EXIT_FAILURE);
     }
+    board->board_size = slot_count;
     board_instance_t *board_instance = malloc(sizeof(board_instance_t));
     if (board_instance == NULL)
     {
@@ -65,7 +68,7 @@ board_instance_t *board_create(key_t key)
     }
     board_instance->board->clients_connected = 0;
     board_instance->board->players_index = 0;
-    for (int i = 0; i < BOARD_SIZE * BOARD_SIZE; i++)
+    for (int i = 0; i < slot_count * slot_count; i++)
     {
         board_instance->board->slots[i].player_id = EMPTY_CELL;
         board_instance->board->slots[i].team_id = EMPTY_CELL;

@@ -6,10 +6,10 @@
 #include <stdlib.h>
 #include <errno.h>
 
-
-board_instance_t *board_open(key_t key)
+board_instance_t *board_open(key_t key, int slot_count)
 {
-    int shm_id = shmget(key, sizeof(board_t), 0);
+    size_t board_size = board_compute_size(slot_count);
+    int shm_id = shmget(key, board_size, 0);
     if (shm_id == -1)
     {
         ft_log(
@@ -29,6 +29,16 @@ board_instance_t *board_open(key_t key)
             "could not attach shared memory segment " C_BOLD "(" C_YELLOW "%#x" C_RESET "): %s",
             key,
             ft_strerror(errno));
+        exit(EXIT_FAILURE);
+    }
+    if (board->board_size != slot_count)
+    {
+        ft_log(
+            LOG_LEVEL_FATAL,
+            "board_open",
+            "board size mismatch: expected " C_BOLD "(" C_YELLOW "%zu" C_RESET "), got " C_BOLD "(" C_YELLOW "%d" C_RESET ")",
+            slot_count,
+            board->board_size);
         exit(EXIT_FAILURE);
     }
     board_instance_t *board_instance = malloc(sizeof(board_instance_t));

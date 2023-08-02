@@ -26,7 +26,7 @@ static void touch(const char *path)
     close(fd);
 }
 
-board_instance_t *board_get(bool_t allow_creation)
+board_instance_t *board_get(bool_t allow_creation, int slot_count)
 {
     touch(IPC_PATH);
     key_t key = ftok(IPC_PATH, IPC_KEY);
@@ -56,13 +56,13 @@ board_instance_t *board_get(bool_t allow_creation)
             LOG_LEVEL_INFO,
             "open_board",
             "Board does not exist, creating it...");
-        board_instance = board_create(key);
+        board_instance = board_create(key, slot_count);
     } else {
         ft_log(
             LOG_LEVEL_INFO,
             "open_board",
             "Board exists, opening it...");
-        board_instance = board_open(key);
+        board_instance = board_open(key, slot_count);
         board_lock(board_instance);
     }
     board_instance->player.player_id = PLAYER_NO_ID;

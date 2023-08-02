@@ -5,6 +5,8 @@
 #include <pawn.h>
 #include <ft_printf.h>
 #include <ft_logs.h>
+#include <visualizer.h>
+#include <signal.h>
 
 static void hang(void)
 {
@@ -13,16 +15,43 @@ static void hang(void)
 	read(STDIN_FILENO, &c, 1);
 }
 
+static void handle_sigint(void)
+{
+	ft_log(LOG_LEVEL_WARNING, "handle_sigint", "Cannot exit with Ctrl+C");
+}
+
 int main(int argc, char **argv)
 {
-	bool_t is_graphic_mode = argc == 2 && ft_strcmp(argv[1], "-g") == 0;
-	board_instance_t *board_instance = board_get(!is_graphic_mode);
-	if (pawn_join_board(board_instance))
+	signal(SIGINT, (__sighandler_t)handle_sigint);
+	if (argc < 3)
 	{
-		ft_log(LOG_LEVEL_FATAL, "main", "could not join board");
-		board_disconnect(board_instance);
+		ft_log(
+			LOG_LEVEL_ERROR,
+			"main",
+			"usage: " C_BOLD "%s" C_RESET " " C_UNDERLINE "arena_size" C_RESET " " C_UNDERLINE "team_nb" C_RESET " " C_ITALIC "[-g]" C_RESET,
+			argv[0]);
+		exit(EXIT_FAILURE);
 	}
-	hang();
+	int arena_size = ft_atoi(argv[1]);
+	int team_nb = ft_atoi(argv[2]);
+	bool_t is_graphic_mode = argc == 4 && !ft_strcmp(argv[3], "-g");
+	board_instance_t *board_instance = board_get(!is_graphic_mode, arena_size);
+	board_instance->player.team_id = team_nb;
+	if (is_graphic_mode)
+	{
+		ft_log(LOG_LEVEL_INFO, "main", "starting graphic mode");
+		visualizer_launch(board_instance);
+	}
+	else
+	{
+		if (pawn_join_board(board_instance))
+			ft_log(LOG_LEVEL_FATAL, "main", "could not join board");
+		else
+		{
+			hang();
+			pawn_leave_board(board_instance);
+		}
+	}
 	board_disconnect(board_instance);
 	return (0);
 }

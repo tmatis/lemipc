@@ -21,11 +21,13 @@ static coord_t find_free_slot(board_instance_t *board_instance)
     coord_t coord = {0, 0};
     srand(time(NULL));
 
+    int board_size = board_instance->board->board_size;
+
     while (true)
     {
-        coord.x = rand() % BOARD_SIZE;
-        coord.y = rand() % BOARD_SIZE;
-        if (board_instance->board->slots[coord.x + coord.y * BOARD_SIZE].player_id == EMPTY_CELL)
+        coord.x = rand() % board_size;
+        coord.y = rand() % board_size;
+        if (board_instance->board->slots[coord.x + coord.y * board_size].player_id == EMPTY_CELL)
             return (coord);
     }
     /* NOT REACHED */
@@ -41,7 +43,8 @@ static coord_t find_free_slot(board_instance_t *board_instance)
 bool_t pawn_join_board(board_instance_t *board_instance)
 {
     board_lock(board_instance);
-    if (board_instance->board->players_index == SLOT_COUNT)
+    int board_size = board_instance->board->board_size;
+    if (board_instance->board->players_index == board_size * board_size)
     {
         board_unlock(board_instance);
         ft_log(
@@ -54,7 +57,7 @@ bool_t pawn_join_board(board_instance_t *board_instance)
     coord_t coord = find_free_slot(board_instance);
     board_instance->x = coord.x;
     board_instance->y = coord.y;
-    player_t *slot = &board_instance->board->slots[coord.x + coord.y * BOARD_SIZE];
+    player_t *slot = &board_instance->board->slots[coord.x + coord.y * board_size];
 
     slot->player_id = ++board_instance->board->players_index;
     slot->team_id = board_instance->player.team_id;

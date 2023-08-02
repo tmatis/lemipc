@@ -6,7 +6,9 @@ LIBFT := $(LIBFTDIR)/libft.a
 LIBMLXDIR := minilibx
 LIBMLX	= minilibx/libmlx.a
 LIBFTINC := $(LIBFTDIR)/includes
+LIBMLXINC := $(LIBMLXDIR)
 LIBS := -L $(LIBFTDIR) -lft -L $(LIBMLXDIR) -lmlx -lXext -lX11 -lm 
+
 
 ifneq ($(filter debug redebug,$(MAKECMDGOALS)),)
 	CFLAGS += -g
@@ -17,16 +19,39 @@ OBJSDIR_RELEASE := .build/release
 OBJSDIR_DEBUG := .build/debug
 INCDIR := includes
 
+INCLUDES := -I $(INCDIR) -I $(LIBFTINC) -I $(LIBMLXINC)
+
 SRCS_MAIN := main.c
+
+# board srcs
 
 SRCS += board/board_create.c \
 		board/board_get.c \
 		board/board_lock.c \
 		board/board_open.c \
-		board/board_disconnect.c
+		board/board_disconnect.c \
+		board/board_compute_size.c
+
+# pawn srcs
 
 SRCS += pawn/pawn_get.c \
-		pawn/pawn_join_board.c
+		pawn/pawn_join_board.c \
+		pawn/pawn_leave_board.c
+
+# visualizer srcs
+
+SRCS += visualizer/visualizer_launch.c \
+		visualizer/render_board.c \
+		visualizer/get_team_color.c
+
+# render utils srcs
+
+SRCS += visualizer/render_utils/frame_draw_line.c \
+		visualizer/render_utils/frame_draw_rectangle.c \
+		visualizer/render_utils/frame_put_pixel.c \
+		visualizer/render_utils/put_string.c \
+		visualizer/render_utils/frame_init.c
+
 
 OBJS_MAIN_RELEASE := $(addprefix $(OBJSDIR_RELEASE)/,$(SRCS_MAIN:.c=.o))
 OBJS_MAIN_DEBUG := $(addprefix $(OBJSDIR_DEBUG)/,$(SRCS_MAIN:.c=.o))
@@ -59,17 +84,17 @@ $(NAME_DEBUG): $(LIBFT) $(LIBMLX) $(OBJS_DEBUG) $(OBJS_MAIN_DEBUG)
 debug: $(NAME_DEBUG)
 
 unit: $(LIBFT) $(LIBMLX) $(OBJS_DEBUG)
-	libft/scripts/car.sh $(OBJS_DEBUG)
+	libft/scripts/car.sh $(OBJS_DEBUG) $(LIBS)
 
 -include $(DEPS_RELEASE)
 $(OBJSDIR_RELEASE)/%.o: $(SRCSDIR)/%.c
 	@mkdir -p $(dir $@)
-	$(CC) $(CFLAGS) -I $(INCDIR) -I $(LIBFTINC) $(DFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS) $(INCLUDES) $(DFLAGS) -c $< -o $@
 
 -include $(DEPS_DEBUG)
 $(OBJSDIR_DEBUG)/%.o: $(SRCSDIR)/%.c
 	@mkdir -p $(dir $@)
-	$(CC) $(CFLAGS) -I $(INCDIR) -I $(LIBFTINC) $(DFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS) $(INCLUDES) $(DFLAGS) -c $< -o $@
 
 clean:
 	make -C $(LIBFTDIR) clean
