@@ -31,6 +31,7 @@ typedef struct
     board_t *board;
     int sem_id;
     int shm_id;
+    int msg_id;
     int x;
     int y;
     player_t player;

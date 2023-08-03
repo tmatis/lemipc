@@ -5,6 +5,7 @@
 #include <ft_string.h>
 #include <errno.h>
 #include <sys/shm.h>
+#include <sys/msg.h>
 
 void board_disconnect(board_instance_t *board_instance)
 {
@@ -41,6 +42,15 @@ void board_disconnect(board_instance_t *board_instance)
                 "board_disconnect",
                 "could not remove semaphore " C_BOLD "(" C_YELLOW "%#x" C_RESET "): %s",
                 board_instance->sem_id,
+                ft_strerror(errno));
+        }
+        if (msgctl(board_instance->msg_id, IPC_RMID, NULL) == -1)
+        {
+            ft_log(
+                LOG_LEVEL_ERROR,
+                "board_disconnect",
+                "could not remove message queue " C_BOLD "(" C_YELLOW "%#x" C_RESET "): %s",
+                board_instance->msg_id,
                 ft_strerror(errno));
         }
     }

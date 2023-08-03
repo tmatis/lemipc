@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <errno.h>
 #include <ft_printf.h>
+#include <sys/msg.h>
 
 board_instance_t *board_create(key_t key, int slot_count)
 {
@@ -45,6 +46,7 @@ board_instance_t *board_create(key_t key, int slot_count)
     }
     board_instance->board = board;
     board_instance->sem_id = semget(key, 1, IPC_CREAT | IPC_EXCL | 0644);
+    board_instance->msg_id = msgget(key, IPC_CREAT | IPC_EXCL | 0644);
     board_instance->shm_id = shm_id;
     if (board_instance->sem_id == -1)
     {
