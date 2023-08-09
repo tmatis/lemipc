@@ -1,6 +1,7 @@
 #include <board.h>
 
-size_t board_compute_size(size_t slot_count)
+size_t board_compute_size(size_t board_size)
 {
-    return (sizeof(board_t) + sizeof(player_t) * slot_count * slot_count);
+    int slot_count = board_size * board_size;
+    return (sizeof(board_t) + sizeof(int) * slot_count);
 }

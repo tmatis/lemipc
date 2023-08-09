@@ -14,16 +14,10 @@
 
 typedef struct
 {
-    int player_id;
-    int team_id;
-} player_t;
-
-typedef struct
-{
     int board_size;
     int clients_connected;
     int players_index;
-    player_t slots[];
+    int slots[];
 } board_t;
 
 typedef struct
@@ -34,7 +28,7 @@ typedef struct
     int msg_id;
     int x;
     int y;
-    player_t player;
+    int team_id;
 } board_instance_t;
 
 board_instance_t *board_get(bool_t allow_creation, int slot_count);

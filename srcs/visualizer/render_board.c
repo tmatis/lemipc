@@ -12,8 +12,8 @@ static void render_pawns(mlx_t *mlx)
         {
             int pos_x = VISUALIZER_BOARD_X + VISUALIZER_BOARD_WIDTH / board_size * x;
             int pos_y = VISUALIZER_BOARD_Y + VISUALIZER_BOARD_HEIGHT / board_size * y;
-            player_t *player = pawn_get(mlx->board_instance, x, y);
-            if (player->player_id == PLAYER_NO_ID)
+            int *cell = pawn_get(mlx->board_instance, x, y);
+            if (*cell == EMPTY_CELL)
                 continue;
             frame_draw_rectangle(
                 &mlx->frame,
@@ -21,7 +21,7 @@ static void render_pawns(mlx_t *mlx)
                 pos_y,
                 pawn_size,
                 pawn_size,
-                get_team_color(player->team_id)
+                get_team_color(*cell)
             );
         }
     }

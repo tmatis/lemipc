@@ -65,8 +65,7 @@ board_instance_t *board_get(bool_t allow_creation, int slot_count)
         board_instance = board_open(key, slot_count);
         board_lock(board_instance);
     }
-    board_instance->player.player_id = PLAYER_NO_ID;
-    board_instance->player.team_id = PLAYER_NO_ID;
+    board_instance->team_id = -1;
     board_instance->board->clients_connected++;
     board_unlock(board_instance);
     return (board_instance);

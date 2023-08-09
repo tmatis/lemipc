@@ -71,9 +71,6 @@ board_instance_t *board_create(key_t key, int slot_count)
     board_instance->board->clients_connected = 0;
     board_instance->board->players_index = 0;
     for (int i = 0; i < slot_count * slot_count; i++)
-    {
-        board_instance->board->slots[i].player_id = EMPTY_CELL;
-        board_instance->board->slots[i].team_id = EMPTY_CELL;
-    }
+        board_instance->board->slots[i] = EMPTY_CELL;
     return (board_instance);
 }

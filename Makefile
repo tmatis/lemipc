@@ -36,6 +36,7 @@ SRCS += board/board_create.c \
 
 SRCS += pawn/pawn_get.c \
 		pawn/pawn_join_board.c \
+		pawn/pawn_count_team_player.c \
 		pawn/pawn_leave_board.c
 
 # visualizer srcs
@@ -52,6 +53,10 @@ SRCS += visualizer/render_utils/frame_draw_line.c \
 		visualizer/render_utils/put_string.c \
 		visualizer/render_utils/frame_init.c
 
+# msgbox srcs
+
+SRCS += msgbox/msgbox_receive.c \
+		msgbox/msgbox_send.c
 
 OBJS_MAIN_RELEASE := $(addprefix $(OBJSDIR_RELEASE)/,$(SRCS_MAIN:.c=.o))
 OBJS_MAIN_DEBUG := $(addprefix $(OBJSDIR_DEBUG)/,$(SRCS_MAIN:.c=.o))

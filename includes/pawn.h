@@ -11,4 +11,13 @@
  */
 bool_t pawn_join_board(board_instance_t *board_instance);
 void pawn_leave_board(board_instance_t *board_instance);
-player_t *pawn_get(board_instance_t *board_instance, int x, int y);
+int *pawn_get(board_instance_t *board_instance, int x, int y);
+int pawn_count_team_player(board_instance_t *board_instance, int team_id);
+
+/**
+ * @brief Check if the pawn is dead
+ * 
+ * @param board_instance the board instance
+ * @return bool_t true if the pawn is dead, false otherwise 
+ */
+bool_t pawn_is_dead(board_instance_t *board_instance);
