@@ -8,13 +8,7 @@
 #include <visualizer.h>
 #include <signal.h>
 #include <msgbox.h>
-
-static void hang(void)
-{
-	char c;
-	ft_log(LOG_LEVEL_DEBUG, "hang", "press enter to continue...");
-	read(STDIN_FILENO, &c, 1);
-}
+#include <routine.h>
 
 // static void handle_sigint(void)
 // {
@@ -57,10 +51,7 @@ int main(int argc, char **argv)
 		if (pawn_join_board(board_instance))
 			ft_log(LOG_LEVEL_FATAL, "main", "could not join board");
 		else
-		{
 			routine(board_instance);
-			pawn_leave_board(board_instance);
-		}
 	}
 	board_disconnect(board_instance);
 	return (0);

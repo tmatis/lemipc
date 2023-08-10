@@ -4,13 +4,12 @@
  * @brief Check if the pawn is dead
  * 
  * @param board_instance the board instance
+ * @param x the x position of the pawn
+ * @param y the y position of the pawn
  * @return bool_t true if the pawn is dead, false otherwise 
  */
-int pawn_around_pawn(board_instance_t *board_instance)
+int pawn_count_pawn_around(board_instance_t *board_instance, int x, int y)
 {
-    int x = board_instance->x;
-    int y = board_instance->y;
-
     int count = 0;
     for (int i = x - 1; i <= x + 1; i++)
     {

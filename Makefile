@@ -23,6 +23,8 @@ INCLUDES := -I $(INCDIR) -I $(LIBFTINC) -I $(LIBMLXINC)
 
 SRCS_MAIN := main.c
 
+SRCS += routine.c
+
 # board srcs
 
 SRCS += board/board_create.c \
@@ -37,7 +39,8 @@ SRCS += board/board_create.c \
 SRCS += pawn/pawn_get.c \
 		pawn/pawn_join_board.c \
 		pawn/pawn_count_team_player.c \
-		pawn/pawn_leave_board.c
+		pawn/pawn_leave_board.c \
+		pawn/pawn_count_around_pawn.c
 
 # visualizer srcs
 
