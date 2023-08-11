@@ -10,7 +10,7 @@
 #include <sys/ipc.h>
 #include <sys/shm.h>
 
-static void touch(const char *path)
+void touch(const char *path)
 {
     int fd = open(path, O_CREAT, 0644);
     if (fd == -1)
@@ -41,7 +41,7 @@ board_instance_t *board_get(bool_t allow_creation, int slot_count)
         exit(EXIT_FAILURE);
     }
     board_instance_t *board_instance;
-    int sem_id = semget(key, 1, 0);
+    int sem_id = semget(key, 2, 0);
     if (sem_id == -1 && !allow_creation)
     {
         ft_log(

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <board.h>
+
 typedef struct
 {
     long team_id;

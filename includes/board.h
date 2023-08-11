@@ -8,7 +8,7 @@
 
 #define PLAYER_NO_ID -1
 
-#define IPC_PATH "/tmp/lemipc-tmatis"
+#define IPC_PATH "/tmp/lemipc-tmatis2"
 
 #define IPC_KEY 0x0
 

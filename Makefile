@@ -23,8 +23,6 @@ INCLUDES := -I $(INCDIR) -I $(LIBFTINC) -I $(LIBMLXINC)
 
 SRCS_MAIN := main.c
 
-SRCS += routine.c
-
 # board srcs
 
 SRCS += board/board_create.c \
@@ -60,6 +58,15 @@ SRCS += visualizer/render_utils/frame_draw_line.c \
 
 SRCS += msgbox/msgbox_receive.c \
 		msgbox/msgbox_send.c
+
+# Strategy srcs
+
+SRCS += strategy/strategy_choose_target.c
+
+# game srcs
+
+SRCS += game/game_routine.c \
+		game/game_start.c
 
 OBJS_MAIN_RELEASE := $(addprefix $(OBJSDIR_RELEASE)/,$(SRCS_MAIN:.c=.o))
 OBJS_MAIN_DEBUG := $(addprefix $(OBJSDIR_DEBUG)/,$(SRCS_MAIN:.c=.o))

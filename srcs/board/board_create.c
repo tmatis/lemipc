@@ -7,6 +7,7 @@
 #include <errno.h>
 #include <ft_printf.h>
 #include <sys/msg.h>
+#include <game.h>
 
 board_instance_t *board_create(key_t key, int slot_count)
 {
@@ -45,7 +46,7 @@ board_instance_t *board_create(key_t key, int slot_count)
         exit(EXIT_FAILURE);
     }
     board_instance->board = board;
-    board_instance->sem_id = semget(key, 1, IPC_CREAT | IPC_EXCL | 0644);
+    board_instance->sem_id = semget(key, 2, IPC_CREAT | IPC_EXCL | 0644);
     board_instance->msg_id = msgget(key, IPC_CREAT | IPC_EXCL | 0644);
     board_instance->shm_id = shm_id;
     if (board_instance->sem_id == -1)
@@ -68,9 +69,21 @@ board_instance_t *board_create(key_t key, int slot_count)
             ft_strerror(errno));
         exit(EXIT_FAILURE);
     }
+    if (semctl(board_instance->sem_id, 1, SETVAL, 0) == -1)
+    {
+        ft_log(
+            LOG_LEVEL_FATAL,
+            "create_board",
+            "could not set semaphore value " C_BOLD "(" C_YELLOW "%#x" C_RESET "): %s",
+            key,
+            ft_strerror(errno));
+        exit(EXIT_FAILURE);
+    }
+
     board_instance->board->clients_connected = 0;
     board_instance->board->players_index = 0;
     for (int i = 0; i < slot_count * slot_count; i++)
         board_instance->board->slots[i] = EMPTY_CELL;
+    game_start_unlock(board_instance);
     return (board_instance);
 }

@@ -53,7 +53,7 @@ board_instance_t *board_open(key_t key, int slot_count)
         exit(EXIT_FAILURE);
     }
     board_instance->board = board;
-    board_instance->sem_id = semget(key, 1, 0);
+    board_instance->sem_id = semget(key, 2, 0);
     board_instance->msg_id = msgget(key, 0);
     board_instance->shm_id = shm_id;
     if (board_instance->sem_id == -1)

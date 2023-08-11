@@ -106,8 +106,6 @@ static void get_min_distance(btree_team_coord_t *node)
 int strategy_choose_target(board_instance_t *board_instance)
 {
     btree_team_coord_t *root = get_coord_t_map(board_instance);
-    btree_team_coord_t *node = root;
-    int min_distance = -1;
 
     btree_team_coord_t *my_team_coord = btree_team_coord_t_search(root, &(team_coord_t){.team_id = board_instance->team_id});
     if (!my_team_coord)
@@ -124,6 +122,6 @@ int strategy_choose_target(board_instance_t *board_instance)
     _my_team_id = -1;
     _my_team_x = -1;
     _my_team_y = -1;
-    btree_team_coord_t_clear(root, NULL);
+    btree_team_coord_t_clear(&root, NULL);
     return team_id;
 }
