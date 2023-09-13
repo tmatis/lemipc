@@ -22,12 +22,11 @@ bool_t msgbox_receive(board_instance_t *board_instance, msg_t *msg)
     {
         ft_log(
             LOG_LEVEL_DEBUG,
-            "msgbox_receive",
             "received message from team %d",
-            msg->target_id);
+            msg->team_id);
         return (true);
     }
     if (errno != ENOMSG)
-        ft_log(LOG_LEVEL_WARNING, "msgbox_receive", "msgrcv failed %s", ft_strerror(errno));
+        ft_log(LOG_LEVEL_WARNING, "msgrcv failed %s", ft_strerror(errno));
     return (false);
 }

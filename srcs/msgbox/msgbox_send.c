@@ -23,13 +23,12 @@ bool_t msgbox_send(board_instance_t *board_instance, msg_t *msg)
     {
         if (msgsnd(msgbox_id, msg, sizeof(msg_t) - sizeof(long), 0) == -1)
         {
-            ft_log(LOG_LEVEL_WARNING, "msgbox_send", "msgsnd failed %s", ft_strerror(errno));
+            ft_log(LOG_LEVEL_WARNING, "msgsnd failed %s", ft_strerror(errno));
             return (false);
         }
     }
     ft_log(
         LOG_LEVEL_DEBUG,
-        "msgbox_send",
         "sent message to team %d",
         msg->team_id);
     return (true);

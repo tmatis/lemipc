@@ -38,7 +38,8 @@ SRCS += pawn/pawn_get.c \
 		pawn/pawn_join_board.c \
 		pawn/pawn_count_team_player.c \
 		pawn/pawn_leave_board.c \
-		pawn/pawn_count_around_pawn.c
+		pawn/pawn_count_around_pawn.c \
+		pawn/pawn_move.c
 
 # visualizer srcs
 
@@ -61,7 +62,9 @@ SRCS += msgbox/msgbox_receive.c \
 
 # Strategy srcs
 
-SRCS += strategy/strategy_choose_target.c
+SRCS += strategy/strategy_choose_team_target.c \
+		strategy/get_distance.c \
+		strategy/strategy_choose_next_move.c
 
 # game srcs
 

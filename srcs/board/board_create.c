@@ -17,7 +17,6 @@ board_instance_t *board_create(key_t key, int slot_count)
     {
         ft_log(
             LOG_LEVEL_FATAL,
-            "create_board",
             "could not create shared memory segment " C_BOLD "(" C_YELLOW "%#x" C_RESET "): %s",
             key,
             ft_strerror(errno));
@@ -28,7 +27,6 @@ board_instance_t *board_create(key_t key, int slot_count)
     {
         ft_log(
             LOG_LEVEL_FATAL,
-            "create_board",
             "could not attach shared memory segment " C_BOLD "(" C_YELLOW "%#x" C_RESET "): %s",
             key,
             ft_strerror(errno));
@@ -40,7 +38,6 @@ board_instance_t *board_create(key_t key, int slot_count)
     {
         ft_log(
             LOG_LEVEL_FATAL,
-            "create_board",
             "could not allocate memory for board instance: %s",
             ft_strerror(errno));
         exit(EXIT_FAILURE);
@@ -53,7 +50,6 @@ board_instance_t *board_create(key_t key, int slot_count)
     {
         ft_log(
             LOG_LEVEL_FATAL,
-            "create_board",
             "could not create semaphore " C_BOLD "(" C_YELLOW "%#x" C_RESET "): %s",
             key,
             ft_strerror(errno));
@@ -63,7 +59,6 @@ board_instance_t *board_create(key_t key, int slot_count)
     {
         ft_log(
             LOG_LEVEL_FATAL,
-            "create_board",
             "could not set semaphore value " C_BOLD "(" C_YELLOW "%#x" C_RESET "): %s",
             key,
             ft_strerror(errno));
@@ -73,7 +68,6 @@ board_instance_t *board_create(key_t key, int slot_count)
     {
         ft_log(
             LOG_LEVEL_FATAL,
-            "create_board",
             "could not set semaphore value " C_BOLD "(" C_YELLOW "%#x" C_RESET "): %s",
             key,
             ft_strerror(errno));
@@ -81,7 +75,7 @@ board_instance_t *board_create(key_t key, int slot_count)
     }
 
     board_instance->board->clients_connected = 0;
-    board_instance->board->players_index = 0;
+    board_instance->board->players_on_board = 0;
     for (int i = 0; i < slot_count * slot_count; i++)
         board_instance->board->slots[i] = EMPTY_CELL;
     game_start_unlock(board_instance);

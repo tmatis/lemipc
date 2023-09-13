@@ -15,12 +15,22 @@ typedef enum e_log_level
 
 /**
  * @brief Log a message
- * 
+ *
  * @param level The level of the log
- * @param context The context of the log
+ * @param file_name The file name of the log
+ * @param line The line of the log
+ * @param function_name The level of the log
  * @param message The message to log (printf like)
  * @param ... The arguments to the message
  */
-void ft_log(t_log_level level, const char *context, const char *message, ...);
+void _ft_log(t_log_level level, const char *file_name, int line, const char *function_name, const char *message, ...);
+
+/**
+ * @brief Log a message
+ * 
+ * @param level The level of the log
+ * @param ... The arguments to the message
+ */
+#define ft_log(level, ...) _ft_log(level, __FILE__, __LINE__, __func__, __VA_ARGS__)
 
 #endif

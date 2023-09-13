@@ -8,7 +8,7 @@
 
 #define PLAYER_NO_ID -1
 
-#define IPC_PATH "/tmp/lemipc-tmatis2"
+#define IPC_PATH "/tmp/lemipc-tmatis"
 
 #define IPC_KEY 0x0
 
@@ -16,7 +16,7 @@ typedef struct
 {
     int board_size;
     int clients_connected;
-    int players_index;
+    int players_on_board;
     int slots[];
 } board_t;
 

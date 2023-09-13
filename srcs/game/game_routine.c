@@ -15,7 +15,7 @@ static void quit_routine(board_instance_t *board_instance)
 static bool_t can_start(board_instance_t *board_instance, int required_players)
 {
     board_lock(board_instance);
-    if (board_instance->board->players_index >= required_players)
+    if (board_instance->board->players_on_board >= required_players)
     {
         board_unlock(board_instance);
         return true;
@@ -28,22 +28,19 @@ static void wait_for_players(board_instance_t *board_instance, int required_play
 {
     ft_log(
         LOG_LEVEL_INFO,
-        "wait_for_players",
         "waiting for %d players",
         required_players);
     game_start_lock(board_instance);
     ft_log(
         LOG_LEVEL_INFO,
-        "wait_for_players",
         "game start semaphore locked");
     while (!can_start(board_instance, required_players))
     {
-        ft_log(
-            LOG_LEVEL_INFO,
-            "wait_for_players",
-            "waiting for players");
-        usleep(10000);
+        usleep(100000);
     }
+    ft_log(
+        LOG_LEVEL_INFO,
+        "game start semaphore unlocked");
     game_start_unlock(board_instance);
 }
 
@@ -53,6 +50,9 @@ void game_routine(board_instance_t *board_instance, int required_players)
 
     wait_for_players(board_instance, required_players);
 
+    // char c;
+    // read(STDIN_FILENO, &c, 1);
+
     while (true)
     {
         msg_t msg;
@@ -61,7 +61,6 @@ void game_routine(board_instance_t *board_instance, int required_players)
         {
             ft_log(
                 LOG_LEVEL_INFO,
-                "routine",
                 "received message new target is %d",
                 msg.target_id);
             team_target = msg.target_id;
@@ -73,30 +72,36 @@ void game_routine(board_instance_t *board_instance, int required_players)
         {
             ft_log(
                 LOG_LEVEL_INFO,
-                "routine",
-                "Oh no! I'm surrounded by 2 pawn ! I'm dead!");
+                "surrounded by 2 pawn, dead");
             quit_routine(board_instance);
             break;
         }
 
-        int potential_team_target = strategy_choose_target(board_instance);
-        if (potential_team_target == -1)
+        if (board_instance->board->players_on_board <= 2)
         {
             ft_log(
                 LOG_LEVEL_INFO,
-                "routine",
+                "There is less than 3 players connected, leaving the board");
+            quit_routine(board_instance);
+            break;
+        }
+
+        team_target_result_t team_target_result = strategy_choose_team_target(board_instance);
+        if (team_target_result.team_id == -1)
+        {
+            ft_log(
+                LOG_LEVEL_INFO,
                 "No more target to attack, I'm leaving the board");
             quit_routine(board_instance);
             break;
         }
-        if (potential_team_target != team_target)
+        if (team_target_result.team_id != team_target)
         {
             ft_log(
                 LOG_LEVEL_INFO,
-                "routine",
                 "new target is %d",
-                potential_team_target);
-            team_target = potential_team_target;
+                team_target_result.team_id);
+            team_target = team_target_result.team_id;
             msgbox_send(
                 board_instance,
                 &(msg_t){
@@ -104,6 +109,11 @@ void game_routine(board_instance_t *board_instance, int required_players)
                     .target_id = team_target,
                 });
         }
+        coord_t next_move = strategy_choose_next_move(
+            board_instance,
+            &team_target_result);
+        pawn_move(board_instance, next_move.x, next_move.y);
+        usleep(250000);
         board_unlock(board_instance);
     }
 }

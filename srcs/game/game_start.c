@@ -20,7 +20,6 @@ void game_start_lock(board_instance_t *board_instance)
     {
         ft_log(
             LOG_LEVEL_FATAL,
-            "game_start_lock",
             "could not lock semaphore " C_BOLD "(" C_YELLOW "%#x" C_RESET "): %s",
             board_instance->sem_id,
             ft_strerror(errno));
@@ -44,7 +43,6 @@ void game_start_unlock(board_instance_t *board_instance)
     {
         ft_log(
             LOG_LEVEL_FATAL,
-            "game_start_unlock",
             "could not unlock semaphore " C_BOLD "(" C_YELLOW "%#x" C_RESET "): %s",
             board_instance->sem_id,
             ft_strerror(errno));

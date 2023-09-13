@@ -38,3 +38,5 @@ int pawn_count_pawn_around(board_instance_t *board_instance, int x, int y);
  * @return bool_t true if the pawn is dead, false otherwise 
  */
 bool_t pawn_is_dead(board_instance_t *board_instance);
+
+void pawn_move(board_instance_t *board_instance, int x, int y);

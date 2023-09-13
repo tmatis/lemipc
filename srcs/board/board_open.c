@@ -15,7 +15,6 @@ board_instance_t *board_open(key_t key, int slot_count)
     {
         ft_log(
             LOG_LEVEL_FATAL,
-            "board_open",
             "could not get shared memory segment " C_BOLD "(" C_YELLOW "%#x" C_RESET "): %s",
             key,
             ft_strerror(errno));
@@ -26,7 +25,6 @@ board_instance_t *board_open(key_t key, int slot_count)
     {
         ft_log(
             LOG_LEVEL_FATAL,
-            "board_open",
             "could not attach shared memory segment " C_BOLD "(" C_YELLOW "%#x" C_RESET "): %s",
             key,
             ft_strerror(errno));
@@ -36,7 +34,6 @@ board_instance_t *board_open(key_t key, int slot_count)
     {
         ft_log(
             LOG_LEVEL_FATAL,
-            "board_open",
             "board size mismatch: expected " C_BOLD "(" C_YELLOW "%zu" C_RESET "), got " C_BOLD "(" C_YELLOW "%d" C_RESET ")",
             slot_count,
             board->board_size);
@@ -47,7 +44,6 @@ board_instance_t *board_open(key_t key, int slot_count)
     {
         ft_log(
             LOG_LEVEL_FATAL,
-            "board_open",
             "could not allocate memory for board instance: %s",
             ft_strerror(errno));
         exit(EXIT_FAILURE);
@@ -60,7 +56,6 @@ board_instance_t *board_open(key_t key, int slot_count)
     {
         ft_log(
             LOG_LEVEL_FATAL,
-            "board_open",
             "could not get semaphore " C_BOLD "(" C_YELLOW "%#x" C_RESET "): %s",
             key,
             ft_strerror(errno));

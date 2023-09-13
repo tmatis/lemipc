@@ -44,7 +44,7 @@ bool_t pawn_join_board(board_instance_t *board_instance)
 {
     board_lock(board_instance);
     int board_size = board_instance->board->board_size;
-    if (board_instance->board->players_index == board_size * board_size)
+    if (board_instance->board->players_on_board == board_size * board_size)
     {
         board_unlock(board_instance);
         ft_log(
@@ -59,7 +59,7 @@ bool_t pawn_join_board(board_instance_t *board_instance)
     board_instance->y = coord.y;
     int *slot = &board_instance->board->slots[coord.x + coord.y * board_size];
 
-    board_instance->board->players_index++;
+    board_instance->board->players_on_board++;
     *slot = board_instance->team_id;
     board_unlock(board_instance);
     return false;

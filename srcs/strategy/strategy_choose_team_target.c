@@ -1,12 +1,13 @@
 #include <pawn.h>
 #include <ft_btree.h>
-#include <math.h>
+#include <strategy.h>
+#include <ft_logs.h>
 
 typedef struct s_team_coord
 {
     int team_id;
-    int x;
-    int y;
+    float x;
+    float y;
 } team_coord_t;
 
 DEFINE_BTREE_HEADERS(team_coord_t);
@@ -35,11 +36,13 @@ static btree_team_coord_t *get_coord_t_map(board_instance_t *board_instance)
 {
     btree_team_coord_t *root = NULL;
 
-    for (int y = 0; y < board_instance->board->board_size; y++)
+    for (int x = 0; x < board_instance->board->board_size; x++)
     {
-        for (int x = 0; x < board_instance->board->board_size; x++)
+        for (int y = 0; y < board_instance->board->board_size; y++)
         {
             int *team_id = pawn_get(board_instance, x, y);
+            if (*team_id == EMPTY_CELL)
+                continue;
 
             team_coord_t team_coord = {
                 .team_id = *team_id,
@@ -60,68 +63,62 @@ static btree_team_coord_t *get_coord_t_map(board_instance_t *board_instance)
     return root;
 }
 
-static int get_distance(int x1, int y1, int x2, int y2)
+typedef struct
 {
-    return sqrt(pow(x2 - x1, 2) + pow(y2 - y1, 2));
-}
-
-static int _min_distance = -1;
-static int _team_id = -1;
-static int _my_team_id = -1;
-static int _my_team_x = -1;
-static int _my_team_y = -1;
+    int team_id;
+    int my_team_id;
+    int my_team_x;
+    int my_team_y;
+    int min_distance;
+} selector_t;
 
 /**
  * @brief Get the min distance between the team and the other teams
- * 
+ *
  * @param node the node to check
  */
-static void get_min_distance(btree_team_coord_t *node)
+static void get_min_distance(btree_team_coord_t *node, selector_t *selector)
 {
     if (!node)
         return;
-    if (node->value.team_id != _my_team_id)
+    if (node->value.team_id != selector->my_team_id)
     {
         int distance = get_distance(
             node->value.x,
             node->value.y,
-            _my_team_x,
-            _my_team_y);
-        if (_min_distance == -1 || distance < _min_distance)
+            selector->my_team_x,
+            selector->my_team_y);
+        if (selector->min_distance == -1 || distance < selector->min_distance)
         {
-            _min_distance = distance;
-            _team_id = node->value.team_id;
+            selector->min_distance = distance;
+            selector->team_id = node->value.team_id;
         }
     }
-    get_min_distance(node->left);
-    get_min_distance(node->right);
+    get_min_distance(node->left, selector);
+    get_min_distance(node->right, selector);
 }
 
 /**
  * @brief Choose a team to target
  *
  * @param board_instance the board instance
- * @return int the team id to target
+ * @return the team id to target and the coord of my team
  */
-int strategy_choose_target(board_instance_t *board_instance)
+team_target_result_t strategy_choose_team_target(board_instance_t *board_instance)
 {
     btree_team_coord_t *root = get_coord_t_map(board_instance);
 
     btree_team_coord_t *my_team_coord = btree_team_coord_t_search(root, &(team_coord_t){.team_id = board_instance->team_id});
     if (!my_team_coord)
-        return -1;
-    _my_team_id = my_team_coord->value.team_id;
-    _my_team_x = my_team_coord->value.x;
-    _my_team_y = my_team_coord->value.y;
-    get_min_distance(root);
-
-    int team_id = _team_id;
-
-    _min_distance = -1;
-    _team_id = -1;
-    _my_team_id = -1;
-    _my_team_x = -1;
-    _my_team_y = -1;
+        return (team_target_result_t){.team_id = -1};
+    selector_t selector = {
+        .my_team_id = board_instance->team_id,
+        .my_team_x = my_team_coord->value.x,
+        .my_team_y = my_team_coord->value.y,
+        .min_distance = -1};
+    get_min_distance(root, &selector);
     btree_team_coord_t_clear(&root, NULL);
-    return team_id;
+    return (team_target_result_t){
+        .team_id = selector.team_id,
+        .my_team_coord = (coord_t){.x = my_team_coord->value.x, .y = my_team_coord->value.y}};
 }

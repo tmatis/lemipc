@@ -7,7 +7,7 @@
  * @brief Convert RGB values to a color
  * 
  */
-#define RGB(r, g, b) ((r << 16) + (g << 8) | b)
+#define RGB(r, g, b) ((r << 16) + (g << 8) + b)
 
 #define VISUALIZER_WINDOW_WIDTH 1000
 #define VISUALIZER_WINDOW_HEIGHT 700

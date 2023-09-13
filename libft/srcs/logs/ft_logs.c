@@ -3,7 +3,6 @@
 #include <ft_colors.h>
 #include "../printf/buffer/buffer_printf.h"
 
-
 static int get_fd_from_level(t_log_level level)
 {
     switch (level)
@@ -44,16 +43,24 @@ static const char *get_text_head_from_level(t_log_level level)
 
 /**
  * @brief Log a message
- * 
+ *
  * @param level The level of the log
- * @param context The context of the log
+ * @param file_name The file name of the log
+ * @param line The line of the log
+ * @param function_name The level of the log
  * @param message The message to log (printf like)
  * @param ... The arguments to the message
  */
-void ft_log(t_log_level level, const char *context, const char *message, ...)
+void _ft_log(t_log_level level, const char *file_name, int line, const char *function_name, const char *message, ...)
 {
     const int fd_to_write = get_fd_from_level(level);
-    ft_dprintf(fd_to_write, "%s " C_BOLD "%s" C_RESET ": ", get_text_head_from_level(level), context);
+    ft_dprintf(
+        fd_to_write,
+        "%s " C_BOLD "%s:%i" C_RESET " (%s): ",
+        get_text_head_from_level(level),
+        file_name,
+        line,
+        function_name);
     va_list args;
     va_start(args, message);
     printf_buffer_t printf_buffer = buffer_printf_init(

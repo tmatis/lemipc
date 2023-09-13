@@ -22,7 +22,6 @@ int main(int argc, char **argv)
 	{
 		ft_log(
 			LOG_LEVEL_INFO,
-			"main",
 			"usage: " C_BOLD "%s" C_RESET " "
 			C_UNDERLINE "arena_size" C_RESET " "
 			C_UNDERLINE "team_nb" C_RESET " "
@@ -38,7 +37,6 @@ int main(int argc, char **argv)
 	{
 		ft_log(
 			LOG_LEVEL_ERROR,
-			"main",
 			"arena_size, team_nb and minimum_players must be positive integers");
 		exit(EXIT_FAILURE);
 	}
@@ -47,13 +45,13 @@ int main(int argc, char **argv)
 	board_instance->team_id = team_nb;
 	if (is_graphic_mode)
 	{
-		ft_log(LOG_LEVEL_INFO, "main", "starting graphic mode");
+		ft_log(LOG_LEVEL_INFO, "starting graphic mode");
 		visualizer_launch(board_instance);
 	}
 	else
 	{
 		if (pawn_join_board(board_instance))
-			ft_log(LOG_LEVEL_FATAL, "main", "could not join board");
+			ft_log(LOG_LEVEL_FATAL, "could not join board");
 		else
 			game_routine(board_instance, minimum_players);
 	}

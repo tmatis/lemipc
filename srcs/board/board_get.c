@@ -17,7 +17,6 @@ void touch(const char *path)
     {
         ft_log(
             LOG_LEVEL_FATAL,
-            "touch",
             "could not create/open file " C_BOLD "(" C_YELLOW "%s" C_RESET "): %s",
             path,
             ft_strerror(errno));
@@ -34,7 +33,6 @@ board_instance_t *board_get(bool_t allow_creation, int slot_count)
     {
         ft_log(
             LOG_LEVEL_FATAL,
-            "open_board",
             "could not get key " C_BOLD "(" IPC_PATH ":%#x)" C_RESET ": %s",
             IPC_KEY,
             ft_strerror(errno));
@@ -46,7 +44,6 @@ board_instance_t *board_get(bool_t allow_creation, int slot_count)
     {
         ft_log(
             LOG_LEVEL_FATAL,
-            "open_board",
             "Board does not exist, and creation is not allowed");
         exit(EXIT_FAILURE);
     }
@@ -54,13 +51,13 @@ board_instance_t *board_get(bool_t allow_creation, int slot_count)
     {
         ft_log(
             LOG_LEVEL_INFO,
-            "open_board",
             "Board does not exist, creating it...");
         board_instance = board_create(key, slot_count);
-    } else {
+    }
+    else
+    {
         ft_log(
             LOG_LEVEL_INFO,
-            "open_board",
             "Board exists, opening it...");
         board_instance = board_open(key, slot_count);
         board_lock(board_instance);
