@@ -1,4 +1,5 @@
 NAME := lemipc
+VISUALIZER_NAME := lemipc_visualizer
 CC := gcc
 CFLAGS := -Wall -Wextra -Werror
 LIBFTDIR := libft
@@ -7,7 +8,8 @@ LIBMLXDIR := minilibx
 LIBMLX	= minilibx/libmlx.a
 LIBFTINC := $(LIBFTDIR)/includes
 LIBMLXINC := $(LIBMLXDIR)
-LIBS := -L $(LIBFTDIR) -lft -L $(LIBMLXDIR) -lmlx -lXext -lX11 -lm 
+LIBS := -lm -L $(LIBFTDIR) -lft
+LIBS_VISUALIZER := -lmlx -lXext -lX11 -L $(LIBMLXDIR)
 
 
 ifneq ($(filter debug redebug,$(MAKECMDGOALS)),)
@@ -41,20 +43,6 @@ SRCS += pawn/pawn_get.c \
 		pawn/pawn_is_dead.c \
 		pawn/pawn_move.c
 
-# graphic_visualizer srcs
-
-SRCS += graphic_visualizer/graphic_visualizer_launch.c \
-		graphic_visualizer/render_board.c \
-		graphic_visualizer/get_team_color.c
-
-# render utils srcs
-
-SRCS += graphic_visualizer/render_utils/frame_draw_line.c \
-		graphic_visualizer/render_utils/frame_draw_rectangle.c \
-		graphic_visualizer/render_utils/frame_put_pixel.c \
-		graphic_visualizer/render_utils/put_string.c \
-		graphic_visualizer/render_utils/frame_init.c
-
 # msgbox srcs
 
 SRCS += msgbox/msgbox_receive.c \
@@ -76,12 +64,29 @@ SRCS += game/game_routine.c \
 SRCS += utils/int_map.c \
 		utils/is_in_board_bound.c
 
+# graphic_visualizer srcs
+
+SRCS_VISUALIZER += graphic_visualizer/graphic_visualizer_launch.c \
+		graphic_visualizer/render_board.c \
+		graphic_visualizer/get_team_color.c \
+		visualizer_main.c
+
+# render utils srcs
+
+SRCS_VISUALIZER += graphic_visualizer/render_utils/frame_draw_line.c \
+		graphic_visualizer/render_utils/frame_draw_rectangle.c \
+		graphic_visualizer/render_utils/frame_put_pixel.c \
+		graphic_visualizer/render_utils/put_string.c \
+		graphic_visualizer/render_utils/frame_init.c
+
 OBJS_MAIN_RELEASE := $(addprefix $(OBJSDIR_RELEASE)/,$(SRCS_MAIN:.c=.o))
 OBJS_MAIN_DEBUG := $(addprefix $(OBJSDIR_DEBUG)/,$(SRCS_MAIN:.c=.o))
 OBJS_RELEASE := $(addprefix $(OBJSDIR_RELEASE)/,$(SRCS:.c=.o))
 OBJS_DEBUG := $(addprefix $(OBJSDIR_DEBUG)/,$(SRCS:.c=.o))
+OBJS_VISUALIZER_RELEASE := $(addprefix $(OBJSDIR_RELEASE)/,$(SRCS_VISUALIZER:.c=.o))
+OBJS_VISUALIZER_DEBUG := $(addprefix $(OBJSDIR_DEBUG)/,$(SRCS_VISUALIZER:.c=.o))
 
-ALL_SRCS := $(SRCS) $(SRCS_MAIN)
+ALL_SRCS := $(SRCS) $(SRCS_MAIN) $(SRCS_VISUALIZER)
 
 DEPS_RELEASE := $(addprefix $(OBJSDIR_RELEASE)/,$(ALL_SRCS:.c=.d))
 DEPS_DEBUG := $(addprefix $(OBJSDIR_DEBUG)/,$(ALL_SRCS:.c=.d))
@@ -89,8 +94,9 @@ DEPS_DEBUG := $(addprefix $(OBJSDIR_DEBUG)/,$(ALL_SRCS:.c=.d))
 DFLAGS	= -MMD -MF $(@:.o=.d)
 
 NAME_DEBUG := $(NAME)_debug
+VISUALIZER_NAME_DEBUG := $(VISUALIZER_NAME)_debug
 
-all: $(NAME)
+all: $(NAME) $(VISUALIZER_NAME)
 
 $(LIBFT):
 	$(MAKE) -C $(LIBFTDIR)
@@ -98,13 +104,19 @@ $(LIBFT):
 $(LIBMLX):
 	$(MAKE) -C $(LIBMLXDIR)
 
-$(NAME): $(LIBFT) $(LIBMLX) $(OBJS_RELEASE) $(OBJS_MAIN_RELEASE)
+$(NAME): $(LIBFT) $(OBJS_RELEASE) $(OBJS_MAIN_RELEASE)
 	$(CC) $(CFLAGS) -o $(NAME) $(OBJS_RELEASE) $(OBJS_MAIN_RELEASE) $(LIBS)
 
-$(NAME_DEBUG): $(LIBFT) $(LIBMLX) $(OBJS_DEBUG) $(OBJS_MAIN_DEBUG)
+$(NAME_DEBUG): $(LIBFT) $(OBJS_DEBUG) $(OBJS_MAIN_DEBUG)
 	$(CC) $(CFLAGS) -o $(NAME_DEBUG) $(OBJS_DEBUG) $(OBJS_MAIN_DEBUG) $(LIBS)
 
-debug: $(NAME_DEBUG)
+$(VISUALIZER_NAME): $(LIBFT) $(LIBMLX) $(OBJS_VISUALIZER_RELEASE) $(OBJS_RELEASE)
+	$(CC) $(CFLAGS) -o $(VISUALIZER_NAME) $(OBJS_VISUALIZER_RELEASE) $(OBJS_RELEASE) $(LIBS) $(LIBS_VISUALIZER)
+
+$(VISUALIZER_NAME_DEBUG): $(LIBFT) $(LIBMLX) $(OBJS_VISUALIZER_DEBUG) $(OBJS_DEBUG)
+	$(CC) $(CFLAGS) -o $(VISUALIZER_NAME_DEBUG) $(OBJS_VISUALIZER_DEBUG) $(OBJS_DEBUG) $(LIBS) $(LIBS_VISUALIZER)
+
+debug: $(NAME_DEBUG) $(VISUALIZER_NAME_DEBUG)
 
 unit: $(LIBFT) $(LIBMLX) $(OBJS_DEBUG)
 	libft/scripts/car.sh $(OBJS_DEBUG) $(LIBS)
@@ -126,7 +138,7 @@ clean:
 
 fclean: clean
 	make -C $(LIBFTDIR) fclean
-	rm -f $(NAME) $(NAME_DEBUG)
+	rm -f $(NAME) $(NAME_DEBUG) $(VISUALIZER_NAME) $(VISUALIZER_NAME_DEBUG)
 
 re: fclean all
 

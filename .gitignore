@@ -1,7 +1,9 @@
-# Executable
+# Executables
 
 lemipc
 lemipc_debug
+lemipc_visualizer
+lemipc_visualizer_debug
 
 # Libraries
 
