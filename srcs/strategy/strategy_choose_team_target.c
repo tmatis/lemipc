@@ -6,8 +6,8 @@
 typedef struct s_team_coord
 {
     int team_id;
-    float x;
-    float y;
+    double x;
+    double y;
 } team_coord_t;
 
 DEFINE_BTREE_HEADERS(team_coord_t);
@@ -67,9 +67,9 @@ typedef struct
 {
     int team_id;
     int my_team_id;
-    int my_team_x;
-    int my_team_y;
-    int min_distance;
+    double my_team_x;
+    double my_team_y;
+    double min_distance;
 } selector_t;
 
 /**
@@ -83,7 +83,7 @@ static void get_min_distance(btree_team_coord_t *node, selector_t *selector)
         return;
     if (node->value.team_id != selector->my_team_id)
     {
-        int distance = get_distance(
+        double distance = get_distance(
             node->value.x,
             node->value.y,
             selector->my_team_x,
@@ -120,5 +120,5 @@ team_target_result_t strategy_choose_team_target(board_instance_t *board_instanc
     btree_team_coord_t_clear(&root, NULL);
     return (team_target_result_t){
         .team_id = selector.team_id,
-        .my_team_coord = (coord_t){.x = my_team_coord->value.x, .y = my_team_coord->value.y}};
+        .my_team_coord = (coord_t){.x = selector.my_team_x, .y = selector.my_team_y}};
 }

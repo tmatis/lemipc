@@ -1,7 +1,7 @@
 #include <board.h>
 #include <mlx.h>
 #include <stdlib.h>
-#include <visualizer.h>
+#include <graphic_visualizer.h>
 #include <ft_printf.h>
 #include "render_utils.h"
 
@@ -71,7 +71,7 @@ static int render(mlx_t *mlx)
 }
 
 /**
- * @brief Launch the visualizer of the board
+ * @brief Launch the graphic_visualizer of the board
  *
  * @param board_instance The board instance
  */

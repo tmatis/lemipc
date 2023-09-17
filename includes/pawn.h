@@ -23,15 +23,6 @@ int *pawn_get(board_instance_t *board_instance, int x, int y);
 int pawn_count_team_player(board_instance_t *board_instance, int team_id);
 
 /**
- * 
- * @brief Check if the pawn is dead
- * 
- * @param board_instance the board instance
- * @return bool_t true if the pawn is dead, false otherwise 
- */
-int pawn_count_pawn_around(board_instance_t *board_instance, int x, int y);
-
-/**
  * @brief Check if the pawn is dead
  * 
  * @param board_instance the board instance

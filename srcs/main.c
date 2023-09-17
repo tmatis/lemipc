@@ -5,7 +5,7 @@
 #include <pawn.h>
 #include <ft_printf.h>
 #include <ft_logs.h>
-#include <visualizer.h>
+#include <graphic_visualizer.h>
 #include <signal.h>
 #include <msgbox.h>
 #include <game.h>

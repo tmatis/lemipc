@@ -1,5 +1,5 @@
 NAME := lemipc
-CC := cc
+CC := gcc
 CFLAGS := -Wall -Wextra -Werror
 LIBFTDIR := libft
 LIBFT := $(LIBFTDIR)/libft.a
@@ -38,22 +38,22 @@ SRCS += pawn/pawn_get.c \
 		pawn/pawn_join_board.c \
 		pawn/pawn_count_team_player.c \
 		pawn/pawn_leave_board.c \
-		pawn/pawn_count_around_pawn.c \
+		pawn/pawn_is_dead.c \
 		pawn/pawn_move.c
 
-# visualizer srcs
+# graphic_visualizer srcs
 
-SRCS += visualizer/visualizer_launch.c \
-		visualizer/render_board.c \
-		visualizer/get_team_color.c
+SRCS += graphic_visualizer/graphic_visualizer_launch.c \
+		graphic_visualizer/render_board.c \
+		graphic_visualizer/get_team_color.c
 
 # render utils srcs
 
-SRCS += visualizer/render_utils/frame_draw_line.c \
-		visualizer/render_utils/frame_draw_rectangle.c \
-		visualizer/render_utils/frame_put_pixel.c \
-		visualizer/render_utils/put_string.c \
-		visualizer/render_utils/frame_init.c
+SRCS += graphic_visualizer/render_utils/frame_draw_line.c \
+		graphic_visualizer/render_utils/frame_draw_rectangle.c \
+		graphic_visualizer/render_utils/frame_put_pixel.c \
+		graphic_visualizer/render_utils/put_string.c \
+		graphic_visualizer/render_utils/frame_init.c
 
 # msgbox srcs
 
@@ -70,6 +70,11 @@ SRCS += strategy/strategy_choose_team_target.c \
 
 SRCS += game/game_routine.c \
 		game/game_start.c
+
+# utils srcs
+
+SRCS += utils/int_map.c \
+		utils/is_in_board_bound.c
 
 OBJS_MAIN_RELEASE := $(addprefix $(OBJSDIR_RELEASE)/,$(SRCS_MAIN:.c=.o))
 OBJS_MAIN_DEBUG := $(addprefix $(OBJSDIR_DEBUG)/,$(SRCS_MAIN:.c=.o))

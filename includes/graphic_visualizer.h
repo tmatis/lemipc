@@ -11,7 +11,7 @@
 
 #define VISUALIZER_WINDOW_WIDTH 1000
 #define VISUALIZER_WINDOW_HEIGHT 700
-#define VISUALIZER_WINDOW_TITLE "lem-ipc visualizer"
+#define VISUALIZER_WINDOW_TITLE "lem-ipc graphic_visualizer"
 
 #define VISUALIZER_BOARD_X 25
 #define VISUALIZER_BOARD_Y 25
@@ -21,7 +21,7 @@
 #define DARK_GREY RGB(20, 20, 20)
 
 /**
- * @brief Launch the visualizer of the board
+ * @brief Launch the graphic_visualizer of the board
  * 
  * @param board_instance The board instance
  */

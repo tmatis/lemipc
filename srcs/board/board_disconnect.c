@@ -57,4 +57,5 @@ void board_disconnect(board_instance_t *board_instance)
             board_instance->board->clients_connected);
         board_unlock(board_instance);
     }
+    free(board_instance);
 }

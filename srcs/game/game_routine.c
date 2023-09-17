@@ -5,6 +5,7 @@
 #include <strategy.h>
 #include <game.h>
 #include <unistd.h>
+#include <ft_string.h>
 
 static void quit_routine(board_instance_t *board_instance)
 {
@@ -65,14 +66,11 @@ void game_routine(board_instance_t *board_instance, int required_players)
                 msg.target_id);
             team_target = msg.target_id;
         }
-        int x = board_instance->x;
-        int y = board_instance->y;
-        int pawn_around_count = pawn_count_pawn_around(board_instance, x, y);
-        if (pawn_around_count == 2)
+        if (pawn_is_dead(board_instance))
         {
             ft_log(
                 LOG_LEVEL_INFO,
-                "surrounded by 2 pawn, dead");
+                "surrounded by 2 pawn from the same team, leaving the board");
             quit_routine(board_instance);
             break;
         }
@@ -97,17 +95,16 @@ void game_routine(board_instance_t *board_instance, int required_players)
         }
         if (team_target_result.team_id != team_target)
         {
+            team_target = team_target_result.team_id;
             ft_log(
                 LOG_LEVEL_INFO,
                 "new target is %d",
-                team_target_result.team_id);
-            team_target = team_target_result.team_id;
-            msgbox_send(
-                board_instance,
-                &(msg_t){
-                    .team_id = board_instance->team_id,
-                    .target_id = team_target,
-                });
+                team_target);
+            msg_t msg;
+            ft_memset(&msg, 0, sizeof(msg_t)); // since there is padding we set everything to 0
+            msg.team_id = board_instance->team_id;
+            msg.target_id = team_target;
+            msgbox_send(board_instance, &msg);
         }
         coord_t next_move = strategy_choose_next_move(
             board_instance,

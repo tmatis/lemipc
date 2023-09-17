@@ -1,6 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include <visualizer.h>
+#include <graphic_visualizer.h>
 
 static const int color_by_team[] = {
     RGB(255, 0, 0),
