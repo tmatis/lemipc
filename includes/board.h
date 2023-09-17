@@ -12,13 +12,23 @@
 
 #define IPC_KEY 0x0
 
+typedef enum {
+    GAME_RUNNING,
+    GAME_IDLE,
+} game_state_t;
+
 typedef struct
 {
     int board_size;
     int clients_connected;
     int players_on_board;
+    game_state_t game_state;
+    int game_result;
     int slots[];
 } board_t;
+
+#define NO_RESULT -1
+#define DRAW_RESULT -2
 
 typedef struct
 {

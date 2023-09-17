@@ -33,6 +33,8 @@ board_instance_t *board_create(key_t key, int slot_count)
         exit(EXIT_FAILURE);
     }
     board->board_size = slot_count;
+    board->game_state = GAME_IDLE;
+    board->game_result = NO_RESULT;
     board_instance_t *board_instance = malloc(sizeof(board_instance_t));
     if (board_instance == NULL)
     {

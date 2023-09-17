@@ -6,6 +6,7 @@
 #include <game.h>
 #include <unistd.h>
 #include <ft_string.h>
+#include <int_map.h>
 
 static void quit_routine(board_instance_t *board_instance)
 {
@@ -16,8 +17,15 @@ static void quit_routine(board_instance_t *board_instance)
 static bool_t can_start(board_instance_t *board_instance, int required_players)
 {
     board_lock(board_instance);
+    if (board_instance->board->game_state == GAME_RUNNING)
+    {
+        board_unlock(board_instance);
+        return true;
+    }
+    board_instance->board->game_result = NO_RESULT;
     if (board_instance->board->players_on_board >= required_players)
     {
+        board_instance->board->game_state = GAME_RUNNING;
         board_unlock(board_instance);
         return true;
     }
@@ -36,13 +44,40 @@ static void wait_for_players(board_instance_t *board_instance, int required_play
         LOG_LEVEL_INFO,
         "game start semaphore locked");
     while (!can_start(board_instance, required_players))
-    {
         usleep(100000);
-    }
     ft_log(
         LOG_LEVEL_INFO,
         "game start semaphore unlocked");
     game_start_unlock(board_instance);
+}
+
+static bool_t check_is_draw(board_instance_t *board_instance)
+{
+    btree_int_map_t *root = NULL;
+    int board_size = board_instance->board->board_size;
+    for (int i = 0; i < board_size * board_size; i++)
+    {
+        int slot = board_instance->board->slots[i];
+        if (slot == EMPTY_CELL)
+            continue;
+        int_map_t int_map = {slot, 1};
+        btree_int_map_t *node = btree_int_map_t_search(root, &int_map);
+        if (node == NULL)
+            btree_int_map_t_insert(&root, &int_map);
+        else
+        {
+            btree_int_map_t_clear(&root, NULL);
+            return false;
+        }
+    }
+    btree_int_map_t_clear(&root, NULL);
+    return true;
+}
+
+static void set_result(board_instance_t *board_instance, int result)
+{
+    if (board_instance->board->game_result == NO_RESULT)
+        board_instance->board->game_result = result;
 }
 
 void game_routine(board_instance_t *board_instance, int required_players)
@@ -50,9 +85,6 @@ void game_routine(board_instance_t *board_instance, int required_players)
     int team_target = -1; // the id of the team we want to attack
 
     wait_for_players(board_instance, required_players);
-
-    // char c;
-    // read(STDIN_FILENO, &c, 1);
 
     while (true)
     {
@@ -75,24 +107,21 @@ void game_routine(board_instance_t *board_instance, int required_players)
             break;
         }
 
-        if (board_instance->board->players_on_board <= 2)
+        team_target_result_t team_target_result = strategy_choose_team_target(board_instance);
+        if (team_target_result.team_id == -1)
         {
-            ft_log(
-                LOG_LEVEL_INFO,
-                "There is less than 3 players connected, leaving the board");
+            set_result(board_instance, board_instance->team_id);
             quit_routine(board_instance);
             break;
         }
 
-        team_target_result_t team_target_result = strategy_choose_team_target(board_instance);
-        if (team_target_result.team_id == -1)
+        if (check_is_draw(board_instance))
         {
-            ft_log(
-                LOG_LEVEL_INFO,
-                "No more target to attack, I'm leaving the board");
+            set_result(board_instance, DRAW_RESULT);
             quit_routine(board_instance);
             break;
         }
+
         if (team_target_result.team_id != team_target)
         {
             team_target = team_target_result.team_id;

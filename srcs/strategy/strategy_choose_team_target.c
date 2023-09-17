@@ -112,6 +112,7 @@ team_target_result_t strategy_choose_team_target(board_instance_t *board_instanc
     if (!my_team_coord)
         return (team_target_result_t){.team_id = -1};
     selector_t selector = {
+        .team_id = -1,
         .my_team_id = board_instance->team_id,
         .my_team_x = my_team_coord->value.x,
         .my_team_y = my_team_coord->value.y,
