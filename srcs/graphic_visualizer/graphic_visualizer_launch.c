@@ -172,6 +172,7 @@ void visualizer_launch(board_instance_t *board_instance)
     mlx_hook(win_ptr, 17, 0, on_close, mlx_ptr);
     mlx_loop_hook(mlx_ptr, render, &mlx);
     mlx_loop(mlx_ptr);
+    mlx_destroy_image(mlx_ptr, frame.img);
     mlx_destroy_window(mlx_ptr, win_ptr);
     mlx_destroy_display(mlx_ptr);
     free(mlx_ptr);
