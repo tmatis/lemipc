@@ -1,6 +1,6 @@
 # Lem-ipc
 
-![image](https://github.com/tmatis/lemipc/assets/54767855/b2cb0181-315a-489b-a846-c531fb09efb3)
+![image](https://github.com/tmatis/lemipc/assets/54767855/179a7162-1d6e-4ab3-a745-bafe23dfa21d)
 
 ## Description
 
