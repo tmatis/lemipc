@@ -93,7 +93,10 @@ static void set_result(board_instance_t *board_instance, int result)
         board_instance->board->game_result = result;
 }
 
-void game_routine(board_instance_t *board_instance, int required_players)
+void game_routine(
+    board_instance_t *board_instance,
+    int required_players,
+    int speed)
 {
     int team_target = -1; // the id of the team we want to attack
 
@@ -169,7 +172,7 @@ void game_routine(board_instance_t *board_instance, int required_players)
             board_instance,
             &team_target_result);
         pawn_move(board_instance, next_move.x, next_move.y);
-        usleep(250000);
+        usleep(SLEEP_TIME / speed);
         board_unlock(board_instance);
     }
 }
