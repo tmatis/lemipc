@@ -34,6 +34,11 @@ void graphic_visualizer_launch(board_instance_t *board_instance);
  */
 void text_visualizer_launch(board_instance_t *board_instance);
 
+/**
+ * @brief Render the board on the frame
+ * 
+ * @param mlx the mlx instance
+ */
 void render_board(mlx_t *mlx);
 
 /**

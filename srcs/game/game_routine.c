@@ -3,96 +3,41 @@
 #include <unistd.h>
 #include <pawn.h>
 #include <strategy.h>
-#include <game.h>
 #include <unistd.h>
 #include <ft_string.h>
-#include <int_map.h>
 #include <utils_lemipc.h>
+#include <game.h>
 
+/**
+ * @brief Quit the routine and leave the board
+ * 
+ * @param board_instance 
+ */
 static void quit_routine(board_instance_t *board_instance)
 {
     pawn_leave_board(board_instance);
     board_unlock(board_instance);
 }
 
-static bool_t can_start(board_instance_t *board_instance, int required_players)
-{
-    board_lock(board_instance);
-    if (board_instance->board->game_state == GAME_RUNNING)
-    {
-        board_unlock(board_instance);
-        return true;
-    }
-    board_instance->board->game_result = NO_RESULT;
-    if (board_instance->board->players_on_board >= required_players)
-    {
-        board_instance->board->game_state = GAME_RUNNING;
-        board_unlock(board_instance);
-        return true;
-    }
-    board_unlock(board_instance);
-    return false;
-}
-
-static int wait_for_players(board_instance_t *board_instance, int required_players)
-{
-    ft_log(
-        LOG_LEVEL_INFO,
-        "waiting for %d players",
-        required_players);
-    if (game_start_lock(board_instance))
-        return (1);
-    ft_log(
-        LOG_LEVEL_INFO,
-        "game start semaphore locked");
-    while (!can_start(board_instance, required_players))
-    {
-        usleep(100000);
-        if (force_stop_is_set())
-        {
-            ft_log(
-                LOG_LEVEL_WARNING,
-                "forced stop while waiting for players");
-            game_start_unlock(board_instance);
-            return (1);
-        }
-    }
-    ft_log(
-        LOG_LEVEL_INFO,
-        "game start semaphore unlocked");
-    game_start_unlock(board_instance);
-    return (0);
-}
-
-static bool_t check_is_draw(board_instance_t *board_instance)
-{
-    btree_int_map_t *root = NULL;
-    int board_size = board_instance->board->board_size;
-    for (int i = 0; i < board_size * board_size; i++)
-    {
-        int slot = board_instance->board->slots[i];
-        if (slot == EMPTY_CELL)
-            continue;
-        int_map_t int_map = {slot, 1};
-        btree_int_map_t *node = btree_int_map_t_search(root, &int_map);
-        if (node == NULL)
-            btree_int_map_t_insert(&root, &int_map);
-        else
-        {
-            btree_int_map_t_clear(&root, NULL);
-            return false;
-        }
-    }
-    btree_int_map_t_clear(&root, NULL);
-    return true;
-}
-
+/**
+ * @brief Set the result of the game if not already set
+ * 
+ * @param board_instance
+ * @param result 
+ */
 static void set_result(board_instance_t *board_instance, int result)
 {
     if (board_instance->board->game_result == NO_RESULT)
         board_instance->board->game_result = result;
 }
 
+/**
+ * @brief Launch the game routine
+ * 
+ * @param board_instance the board instance
+ * @param required_players the number of required players
+ * @param speed the speed of the game
+ */
 void game_routine(
     board_instance_t *board_instance,
     int required_players,
@@ -100,7 +45,7 @@ void game_routine(
 {
     int team_target = -1; // the id of the team we want to attack
 
-    if (wait_for_players(board_instance, required_players))
+    if (game_wait_for_players(board_instance, required_players))
     {
         ft_log(
             LOG_LEVEL_FATAL,
@@ -148,7 +93,7 @@ void game_routine(
             break;
         }
 
-        if (check_is_draw(board_instance))
+        if (game_check_is_draw(board_instance))
         {
             set_result(board_instance, DRAW_RESULT);
             quit_routine(board_instance);

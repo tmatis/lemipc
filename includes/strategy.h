@@ -14,8 +14,16 @@ typedef struct
     coord_t my_team_coord;
 } team_target_result_t;
 
+/**
+ * @brief Get the distance between two points
+ * 
+ * @param x1 
+ * @param y1 
+ * @param x2 
+ * @param y2 
+ * @return double 
+ */
 double get_distance(int x1, int y1, int x2, int y2);
-
 /**
  * @brief Choose a team to target
  *
@@ -29,7 +37,7 @@ team_target_result_t strategy_choose_team_target(board_instance_t *board_instanc
  * @brief Choose the next movement of the pawn
  *
  * @param board_instance The board instance
- * @return int The direction to move
+ * @return coord_t The coord of the next movement
  */
 coord_t strategy_choose_next_move(
     board_instance_t *board_instance,

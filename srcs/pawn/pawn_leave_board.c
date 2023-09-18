@@ -1,5 +1,10 @@
 #include <board.h>
 
+/**
+ * @brief Leave the board and update counters and game state
+ * 
+ * @param board_instance 
+ */
 void pawn_leave_board(board_instance_t *board_instance)
 {
     int board_size = board_instance->board->board_size;

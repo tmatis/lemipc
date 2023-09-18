@@ -45,7 +45,7 @@ static void text_client_connected_rendering(mlx_t *mlx)
 
     ft_asprintf(
         &client_connected_text,
-        "Client connected: %i",
+        "Clients connected: %i",
         mlx->board_instance->board->clients_connected);
 
     if (!client_connected_text)
@@ -66,7 +66,7 @@ static void text_player_on_board_rendering(mlx_t *mlx)
 
     ft_asprintf(
         &player_on_board_text,
-        "Player on board: %i",
+        "Players on board: %i",
         mlx->board_instance->board->players_on_board);
 
     if (!player_on_board_text)

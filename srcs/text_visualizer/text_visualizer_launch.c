@@ -6,6 +6,11 @@
 
 #define WAIT_100MS 100000
 
+/**
+ * @brief Render the board in text mode
+ * 
+ * @param board_instance 
+ */
 static void text_render_board(board_instance_t *board_instance)
 {
     int board_size = board_instance->board->board_size;
@@ -23,6 +28,11 @@ static void text_render_board(board_instance_t *board_instance)
     }
 }
 
+/**
+ * @brief Launch the text visualizer
+ * 
+ * @param board_instance
+ */
 void text_visualizer_launch(board_instance_t *board_instance)
 {
     while (true)

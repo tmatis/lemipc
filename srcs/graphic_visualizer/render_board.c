@@ -2,6 +2,11 @@
 #include <visualizer.h>
 #include <pawn.h>
 
+/**
+ * @brief Render the pawns on the frame
+ * 
+ * @param mlx the mlx instance
+ */
 static void render_pawns(mlx_t *mlx)
 {
     int board_size = mlx->board_instance->board->board_size;
@@ -27,6 +32,11 @@ static void render_pawns(mlx_t *mlx)
     }
 }
 
+/**
+ * @brief Render the board on the frame
+ * 
+ * @param mlx the mlx instance
+ */
 void render_board(mlx_t *mlx)
 {
     frame_draw_rectangle(

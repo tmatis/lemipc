@@ -1,6 +1,13 @@
 #include <ft_logs.h>
 #include <pawn.h>
 
+/**
+ * @brief Move a pawn to a new position while checking if the move is valid
+ * 
+ * @param board_instance
+ * @param x 
+ * @param y 
+ */
 void pawn_move(board_instance_t *board_instance, int x, int y)
 {
     int *pawn = pawn_get(board_instance, board_instance->x, board_instance->y);

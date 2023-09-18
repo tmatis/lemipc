@@ -57,7 +57,9 @@ SRCS += strategy/strategy_choose_team_target.c \
 # game srcs
 
 SRCS += game/game_routine.c \
-		game/game_start.c
+		game/game_start.c \
+		game/game_check_is_draw.c \
+		game/game_wait_for_players.c
 
 # utils srcs
 

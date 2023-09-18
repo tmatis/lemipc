@@ -22,7 +22,7 @@
  * @param team_target_result
  * @return coord_t coord of the closest pawn
  */
-coord_t choose_target_coord(
+static coord_t choose_target_coord(
     board_instance_t *board_instance,
     team_target_result_t *team_target_result)
 {
@@ -62,7 +62,16 @@ coord_t choose_target_coord(
     return closest_coord;
 }
 
-int compute_distance_score(
+/**
+ * @brief Compute the score of a distance
+ * 
+ * @param base_distance the distance without moving
+ * @param distance the distance with moving
+ * @param bonus_per_unit the bonus per unit if we are closer to the target
+ * @param malus_per_unit the malus per unit if we are farther from the target
+ * @return int the score
+ */
+static int compute_distance_score(
     double base_distance,
     double distance,
     int bonus_per_unit,
@@ -77,7 +86,15 @@ int compute_distance_score(
     return ceil(abs_diff * malus_per_unit);
 }
 
-bool_t check_is_going_to_kill(
+/**
+ * @brief Check if the pawn is going to kill a pawn
+ * 
+ * @param board_instance the board instance
+ * @param x the new x with movement
+ * @param y the new y with movement
+ * @return bool_t true if the pawn is going to kill a pawn
+ */
+static bool_t check_is_going_to_kill(
     board_instance_t *board_instance,
     int x,
     int y)
@@ -107,7 +124,15 @@ bool_t check_is_going_to_kill(
     return false;
 }
 
-int compute_kill_score(
+/**
+ * @brief Compute the kill score of a movement
+ * 
+ * @param board_instance 
+ * @param potential_x 
+ * @param potential_y 
+ * @return int the score
+ */
+static int compute_kill_score(
     board_instance_t *board_instance,
     int potential_x,
     int potential_y)
@@ -140,7 +165,7 @@ int compute_kill_score(
  * @brief Choose the next movement of the pawn
  *
  * @param board_instance The board instance
- * @return int The direction to move
+ * @return coord_t The coord of the next movement
  */
 coord_t strategy_choose_next_move(
     board_instance_t *board_instance,

@@ -11,6 +11,11 @@
 #include <utils_lemipc.h>
 #include <sys/types.h>
 
+/**
+ * @brief Called when ctrl+c is pressed
+ * 
+ * @param signo
+ */
 static void sig_handler(int signo)
 {
 	(void)signo;
@@ -18,6 +23,10 @@ static void sig_handler(int signo)
 	force_stop();
 }
 
+/**
+ * @brief Set the up signals
+ * 
+ */
 static void setup_signals(void)
 {
 	signal(SIGINT, sig_handler);
