@@ -166,7 +166,7 @@ void game_routine(
             ft_memset(&msg_to_send, 0, sizeof(msg_t)); // since there is padding we set everything to 0
             msg_to_send.team_id = board_instance->team_id;
             msg_to_send.target_id = team_target;
-            msgbox_send(board_instance, &msg);
+            msgbox_send(board_instance, &msg_to_send);
         }
         coord_t next_move = strategy_choose_next_move(
             board_instance,
