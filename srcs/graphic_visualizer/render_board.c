@@ -1,5 +1,5 @@
 #include "render_utils.h"
-#include <graphic_visualizer.h>
+#include <visualizer.h>
 #include <pawn.h>
 
 static void render_pawns(mlx_t *mlx)

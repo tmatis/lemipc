@@ -78,7 +78,8 @@ SRCS_VISUALIZER += graphic_visualizer/render_utils/frame_draw_line.c \
 		graphic_visualizer/render_utils/frame_draw_rectangle.c \
 		graphic_visualizer/render_utils/frame_put_pixel.c \
 		graphic_visualizer/render_utils/put_string.c \
-		graphic_visualizer/render_utils/frame_init.c
+		graphic_visualizer/render_utils/frame_init.c \
+		text_visualizer/text_visualizer_launch.c
 
 OBJS_MAIN_RELEASE := $(addprefix $(OBJSDIR_RELEASE)/,$(SRCS_MAIN:.c=.o))
 OBJS_MAIN_DEBUG := $(addprefix $(OBJSDIR_DEBUG)/,$(SRCS_MAIN:.c=.o))

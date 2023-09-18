@@ -1,7 +1,7 @@
 #include <board.h>
 #include <mlx.h>
 #include <stdlib.h>
-#include <graphic_visualizer.h>
+#include <visualizer.h>
 #include <ft_printf.h>
 #include "render_utils.h"
 #include <ft_string.h>
@@ -39,31 +39,6 @@ static void text_status_rendering(mlx_t *mlx)
         status_text);
 }
 
-static void text_winner_rendering(mlx_t *mlx)
-{
-    char *winner_text = NULL;
-
-    int game_result = mlx->board_instance->board->game_result;
-
-    if (game_result == NO_RESULT)
-        return;
-    else if (game_result == DRAW_RESULT)
-        winner_text = ft_strdup("Draw");
-    else
-        ft_asprintf(&winner_text, "Winner: team %i", game_result);
-
-    if (!winner_text)
-        return;
-
-    put_string(
-        mlx,
-        700,
-        60,
-        RGB(255, 255, 255),
-        winner_text);
-    free(winner_text);
-}
-
 static void text_client_connected_rendering(mlx_t *mlx)
 {
     char *client_connected_text;
@@ -85,10 +60,57 @@ static void text_client_connected_rendering(mlx_t *mlx)
     free(client_connected_text);
 }
 
+static void text_player_on_board_rendering(mlx_t *mlx)
+{
+    char *player_on_board_text;
+
+    ft_asprintf(
+        &player_on_board_text,
+        "Player on board: %i",
+        mlx->board_instance->board->players_on_board);
+
+    if (!player_on_board_text)
+        return;
+
+    put_string(
+        mlx,
+        700,
+        60,
+        RGB(255, 255, 255),
+        player_on_board_text);
+    free(player_on_board_text);
+}
+
+static void text_winner_rendering(mlx_t *mlx)
+{
+    char *winner_text = NULL;
+
+    int game_result = mlx->board_instance->board->game_result;
+
+    if (game_result == NO_RESULT)
+        return;
+    else if (game_result == DRAW_RESULT)
+        winner_text = ft_strdup("Draw");
+    else
+        ft_asprintf(&winner_text, "Winner: team %i", game_result);
+
+    if (!winner_text)
+        return;
+
+    put_string(
+        mlx,
+        700,
+        80,
+        RGB(255, 255, 255),
+        winner_text);
+    free(winner_text);
+}
+
 static void text_rendering(mlx_t *mlx)
 {
     text_status_rendering(mlx);
     text_client_connected_rendering(mlx);
+    text_player_on_board_rendering(mlx);
     text_winner_rendering(mlx);
 }
 
@@ -154,7 +176,7 @@ static int render(mlx_t *mlx)
  *
  * @param board_instance The board instance
  */
-void visualizer_launch(board_instance_t *board_instance)
+void graphic_visualizer_launch(board_instance_t *board_instance)
 {
     (void)board_instance;
     void *mlx_ptr = mlx_init();

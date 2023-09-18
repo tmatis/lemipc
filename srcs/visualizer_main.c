@@ -1,4 +1,4 @@
-#include <graphic_visualizer.h>
+#include <visualizer.h>
 #include <stdlib.h>
 #include <ft_logs.h>
 #include <ft_string.h>
@@ -20,13 +20,28 @@ static void setup_signals(void)
 
 int main(int argc, char **argv)
 {
-    if (argc != 2)
+    if (argc < 2 || argc > 3)
     {
         ft_log(
             LOG_LEVEL_INFO,
-            "usage: " C_BOLD "%s" C_RESET " " C_UNDERLINE "board_size" C_RESET " ",
+            "usage: " C_BOLD "%s" C_RESET " " C_UNDERLINE "board_size"
+            C_RESET " [--text]" C_RESET,
             argv[0]);
         exit(EXIT_FAILURE);
+    }
+    bool_t text_mode = false;
+    if (argc == 3)
+    {
+        if (ft_strcmp(argv[2], "--text") == 0)
+            text_mode = true;
+        else
+        {
+            ft_log(
+                LOG_LEVEL_ERROR,
+                "unknown option %s",
+                argv[2]);
+            exit(EXIT_FAILURE);
+        }
     }
     int arena_size = ft_atoi(argv[1]);
     if (arena_size <= 0)
@@ -41,7 +56,10 @@ int main(int argc, char **argv)
         LOG_LEVEL_INFO,
         "launching visualizer");
     setup_signals();
-    visualizer_launch(board_instance);
+    if (text_mode)
+        text_visualizer_launch(board_instance);
+    else
+        graphic_visualizer_launch(board_instance);
     board_disconnect(board_instance);
     return (0);
 }

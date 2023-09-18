@@ -25,7 +25,14 @@
  * 
  * @param board_instance The board instance
  */
-void visualizer_launch(board_instance_t *board_instance);
+void graphic_visualizer_launch(board_instance_t *board_instance);
+
+/**
+ * @brief Launch the text_visualizer of the board
+ * 
+ * @param board_instance The board instance
+ */
+void text_visualizer_launch(board_instance_t *board_instance);
 
 void render_board(mlx_t *mlx);
 
