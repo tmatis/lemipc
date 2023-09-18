@@ -3,7 +3,7 @@
 #include <board.h>
 
 #define DEFAULT_SPEED 1
-#define SLEEP_TIME 250000
+#define SLEEP_TIME 500000
 
 /**
  * @brief Lock the game start semaphore
