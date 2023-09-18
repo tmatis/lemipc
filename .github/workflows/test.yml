@@ -1,4 +1,4 @@
-name: {{name}} tests
+name: lemipc tests
 
 on:
   push:

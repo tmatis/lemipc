@@ -4,7 +4,7 @@ CFLAGS := -Wall -Wextra -Werror -g
 LIBFTDIR := libft
 LIBFT := $(LIBFTDIR)/libft.a
 LIBFTINC := $(LIBFTDIR)/includes
-LIBS := -L $(LIBFTDIR) -lft
+LIBS := -L $(LIBFTDIR) -lft {{libs}}
 
 OBJSDIR := .build/tests
 

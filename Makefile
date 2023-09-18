@@ -119,8 +119,8 @@ $(VISUALIZER_NAME_DEBUG): $(LIBFT) $(LIBMLX) $(OBJS_VISUALIZER_DEBUG) $(OBJS_DEB
 
 debug: $(NAME_DEBUG) $(VISUALIZER_NAME_DEBUG)
 
-unit: $(LIBFT) $(LIBMLX) $(OBJS_DEBUG)
-	libft/scripts/car.sh $(OBJS_DEBUG) $(LIBS)
+unit: $(LIBFT) $(OBJS_DEBUG)
+	libft/scripts/car.sh $(OBJS_DEBUG) -lm -lpthread
 
 -include $(DEPS_RELEASE)
 $(OBJSDIR_RELEASE)/%.o: $(SRCSDIR)/%.c

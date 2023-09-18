@@ -6,7 +6,18 @@ CYAN='\033[0;36m'
 BOLD='\033[1m'
 NC='\033[0m'
 
-OBJS=$@
+LIBS=""
+OBJS=""
+
+ARGS=$@
+
+for arg in $ARGS; do
+    if [[ $arg == -l* ]]; then
+        LIBS="$LIBS $arg"
+    else
+        OBJS="$OBJS $arg"
+    fi
+done
 
 FILES=$(find tests -name "*.c")
 FILES_INLINE=$(echo $FILES | sed 's/\n/ /g')
@@ -30,7 +41,9 @@ function cleanup {
 echo -en "${CYAN}Generating test files... ${NC}"
 
 echo -e "#include <ft_test.h>\n\nTEST_FRAMEWORK" > .test_main.c
-sed "s|{{srcs}}|$FILES_INLINE|g" $script_dir/templates/tests/Makefile.template | sed "s|{{objs}}|$OBJS|g" > .Makefile-tests
+sed "s|{{srcs}}|$FILES_INLINE|g" $script_dir/templates/tests/Makefile.template | \
+    sed "s|{{objs}}|$OBJS|g" | \
+    sed "s|{{libs}}|$LIBS|g" > .Makefile-tests
 
 echo -e "${GREEN}[OK]${NC}"
 
