@@ -8,7 +8,7 @@ LIBMLXDIR := minilibx
 LIBMLX	= minilibx/libmlx.a
 LIBFTINC := $(LIBFTDIR)/includes
 LIBMLXINC := $(LIBMLXDIR)
-LIBS := -lm -L $(LIBFTDIR) -lft
+LIBS := -lpthread -lm -L $(LIBFTDIR) -lft
 LIBS_VISUALIZER := -lmlx -lXext -lX11 -L $(LIBMLXDIR)
 
 
@@ -61,8 +61,9 @@ SRCS += game/game_routine.c \
 
 # utils srcs
 
-SRCS += utils/int_map.c \
-		utils/is_in_board_bound.c
+SRCS += utils_lemipc/int_map.c \
+		utils_lemipc/is_in_board_bound.c \
+		utils_lemipc/force_stop.c
 
 # graphic_visualizer srcs
 

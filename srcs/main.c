@@ -8,6 +8,20 @@
 #include <signal.h>
 #include <msgbox.h>
 #include <game.h>
+#include <utils_lemipc.h>
+#include <sys/types.h>
+
+static void sig_handler(int signo)
+{
+	(void)signo;
+	ft_printf("\e[2K\r"); // erase the line
+	force_stop();
+}
+
+static void setup_signals(void)
+{
+	signal(SIGINT, sig_handler);
+}
 
 int main(int argc, char **argv)
 {
@@ -15,10 +29,7 @@ int main(int argc, char **argv)
 	{
 		ft_log(
 			LOG_LEVEL_INFO,
-			"usage: " C_BOLD "%s" C_RESET " "
-			C_UNDERLINE "arena_size" C_RESET " "
-			C_UNDERLINE "team_nb" C_RESET " "
-			C_UNDERLINE "minimum_players" C_RESET " ",
+			"usage: " C_BOLD "%s" C_RESET " " C_UNDERLINE "arena_size" C_RESET " " C_UNDERLINE "team_nb" C_RESET " " C_UNDERLINE "minimum_players" C_RESET " ",
 			argv[0]);
 		exit(EXIT_FAILURE);
 	}
@@ -37,7 +48,10 @@ int main(int argc, char **argv)
 	if (pawn_join_board(board_instance))
 		ft_log(LOG_LEVEL_FATAL, "could not join board");
 	else
+	{
+		setup_signals();
 		game_routine(board_instance, minimum_players);
+	}
 	board_disconnect(board_instance);
 	return (0);
 }

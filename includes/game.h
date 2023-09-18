@@ -6,8 +6,9 @@
  * @brief Lock the game start semaphore
  * 
  * @param board_instance the board instance
+ * @return int 0 on success, non-zero on failure
  */
-void game_start_lock(board_instance_t *board_instance);
+int game_start_lock(board_instance_t *board_instance);
 
 /**
  * @brief Unlock the game start semaphore

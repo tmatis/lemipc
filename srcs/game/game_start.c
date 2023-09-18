@@ -8,8 +8,9 @@
  * @brief Lock the game start semaphore
  * 
  * @param board_instance the board instance
+ * @return int 0 on success, non-zero on failure
  */
-void game_start_lock(board_instance_t *board_instance)
+int game_start_lock(board_instance_t *board_instance)
 {
     struct sembuf lock_op = {
         .sem_num = 1,
@@ -23,8 +24,9 @@ void game_start_lock(board_instance_t *board_instance)
             "could not lock semaphore " C_BOLD "(" C_YELLOW "%#x" C_RESET "): %s",
             board_instance->sem_id,
             ft_strerror(errno));
-        exit(EXIT_FAILURE);
+        return (1);
     }
+    return (0);
 }
 
 /**

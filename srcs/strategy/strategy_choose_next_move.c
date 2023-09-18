@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include <pawn.h>
 #include <math.h>
-#include <utils.h>
+#include <utils_lemipc.h>
 
 #define KILL_ENEMY_BONUS 20
 #define KILL_ALLY_MALUS -35

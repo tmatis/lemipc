@@ -7,6 +7,7 @@
 #include <unistd.h>
 #include <ft_string.h>
 #include <int_map.h>
+#include <utils_lemipc.h>
 
 static void quit_routine(board_instance_t *board_instance)
 {
@@ -33,22 +34,34 @@ static bool_t can_start(board_instance_t *board_instance, int required_players)
     return false;
 }
 
-static void wait_for_players(board_instance_t *board_instance, int required_players)
+static int wait_for_players(board_instance_t *board_instance, int required_players)
 {
     ft_log(
         LOG_LEVEL_INFO,
         "waiting for %d players",
         required_players);
-    game_start_lock(board_instance);
+    if (game_start_lock(board_instance))
+        return (1);
     ft_log(
         LOG_LEVEL_INFO,
         "game start semaphore locked");
     while (!can_start(board_instance, required_players))
+    {
         usleep(100000);
+        if (force_stop_is_set())
+        {
+            ft_log(
+                LOG_LEVEL_WARNING,
+                "forced stop while waiting for players");
+            game_start_unlock(board_instance);
+            return (1);
+        }
+    }
     ft_log(
         LOG_LEVEL_INFO,
         "game start semaphore unlocked");
     game_start_unlock(board_instance);
+    return (0);
 }
 
 static bool_t check_is_draw(board_instance_t *board_instance)
@@ -84,12 +97,29 @@ void game_routine(board_instance_t *board_instance, int required_players)
 {
     int team_target = -1; // the id of the team we want to attack
 
-    wait_for_players(board_instance, required_players);
+    if (wait_for_players(board_instance, required_players))
+    {
+        ft_log(
+            LOG_LEVEL_FATAL,
+            "could not wait for players, leaving the board");
+        board_lock(board_instance);
+        pawn_leave_board(board_instance);
+        board_unlock(board_instance);
+        return;
+    }
 
     while (true)
     {
-        msg_t msg;
         board_lock(board_instance);
+        if (force_stop_is_set())
+        {
+            ft_log(
+                LOG_LEVEL_INFO,
+                "forced stop, leaving the board");
+            quit_routine(board_instance);
+            break;
+        }
+        msg_t msg;
         if (msgbox_receive(board_instance, &msg))
         {
             ft_log(
@@ -129,10 +159,10 @@ void game_routine(board_instance_t *board_instance, int required_players)
                 LOG_LEVEL_INFO,
                 "new target is %d",
                 team_target);
-            msg_t msg;
-            ft_memset(&msg, 0, sizeof(msg_t)); // since there is padding we set everything to 0
-            msg.team_id = board_instance->team_id;
-            msg.target_id = team_target;
+            msg_t msg_to_send;
+            ft_memset(&msg_to_send, 0, sizeof(msg_t)); // since there is padding we set everything to 0
+            msg_to_send.team_id = board_instance->team_id;
+            msg_to_send.target_id = team_target;
             msgbox_send(board_instance, &msg);
         }
         coord_t next_move = strategy_choose_next_move(

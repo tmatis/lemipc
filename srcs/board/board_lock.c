@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <errno.h>
 #include <unistd.h>
+#include <utils_lemipc.h>
 
 void board_lock(board_instance_t *board_instance)
 {
@@ -15,10 +16,18 @@ void board_lock(board_instance_t *board_instance)
     if (semop(board_instance->sem_id, &lock_op, 1) == -1)
     {
         ft_log(
-            LOG_LEVEL_FATAL,
+            LOG_LEVEL_ERROR,
             "could not lock semaphore " C_BOLD "(" C_YELLOW "%#x" C_RESET "): %s",
             board_instance->sem_id,
             ft_strerror(errno));
+        if (errno == EINTR)
+        {
+            ft_log(
+                LOG_LEVEL_WARNING,
+                "interrupted by a signal, retrying");
+            force_stop();
+            return (board_lock(board_instance));
+        }
         exit(EXIT_FAILURE);
     }
 }

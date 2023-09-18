@@ -5,6 +5,8 @@
 #include <ft_printf.h>
 #include "render_utils.h"
 #include <ft_string.h>
+#include <utils_lemipc.h>
+#include <ft_logs.h>
 
 /**
  * @brief Callback called when the window is closed
@@ -119,6 +121,15 @@ static void graphic_rendering(mlx_t *mlx)
 static int render(mlx_t *mlx)
 {
     board_lock(mlx->board_instance);
+    if (force_stop_is_set())
+    {
+        ft_log(
+            LOG_LEVEL_INFO,
+            "forced stop, leaving the board");
+        board_unlock(mlx->board_instance);
+        mlx_loop_end(mlx->mlx);
+        return (0);
+    }
     frame_draw_rectangle(
         &mlx->frame,
         0,

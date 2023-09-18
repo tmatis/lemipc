@@ -2,6 +2,21 @@
 #include <stdlib.h>
 #include <ft_logs.h>
 #include <ft_string.h>
+#include <signal.h>
+#include <utils_lemipc.h>
+#include <ft_printf.h>
+
+static void sig_handler(int signo)
+{
+	(void)signo;
+	ft_printf("\e[2K\r"); // erase the line
+	force_stop();
+}
+
+static void setup_signals(void)
+{
+	signal(SIGINT, sig_handler);
+}
 
 int main(int argc, char **argv)
 {
@@ -25,6 +40,7 @@ int main(int argc, char **argv)
     ft_log(
         LOG_LEVEL_INFO,
         "launching visualizer");
+    setup_signals();
     visualizer_launch(board_instance);
     board_disconnect(board_instance);
     return (0);
