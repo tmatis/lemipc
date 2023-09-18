@@ -172,7 +172,7 @@ void game_routine(
             board_instance,
             &team_target_result);
         pawn_move(board_instance, next_move.x, next_move.y);
-        usleep(SLEEP_TIME / speed);
+        usleep(SLEEP_TIME / (speed * (board_instance->board->players_on_board)));
         board_unlock(board_instance);
     }
 }
