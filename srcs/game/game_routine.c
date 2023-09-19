@@ -58,6 +58,7 @@ void game_routine(
 
     while (true)
     {
+        int new_target = -1;
         board_lock(board_instance);
         if (force_stop_is_set())
         {
@@ -74,7 +75,7 @@ void game_routine(
                 LOG_LEVEL_INFO,
                 "received message new target is %d",
                 msg.target_id);
-            team_target = msg.target_id;
+            new_target = msg.target_id;
         }
         if (pawn_is_dead(board_instance))
         {
@@ -99,10 +100,11 @@ void game_routine(
             quit_routine(board_instance);
             break;
         }
-
-        if (team_target_result.team_id != team_target)
+        
+        new_target = team_target_result.team_id;
+        if (new_target != team_target)
         {
-            team_target = team_target_result.team_id;
+            team_target = new_target;
             ft_log(
                 LOG_LEVEL_INFO,
                 "new target is %d",
