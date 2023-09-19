@@ -1,6 +1,6 @@
 NAME := lemipc
 VISUALIZER_NAME := lemipc_visualizer
-CC := gcc
+CC := cc
 CFLAGS := -Wall -Wextra -Werror
 LIBFTDIR := libft
 LIBFT := $(LIBFTDIR)/libft.a
