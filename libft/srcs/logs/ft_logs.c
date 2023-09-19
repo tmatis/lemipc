@@ -67,7 +67,10 @@ void _ft_log(t_log_level level, const char *file_name, int line, const char *fun
         PRINTF_WRITE_MODE,
         fd_to_write);
     if (printf_buffer.str == NULL)
+    {
+        va_end(args);
         return;
+    }
     printf_wrapper(message, args, &printf_buffer);
     va_end(args);
     buffer_printf_destroy(&printf_buffer);
