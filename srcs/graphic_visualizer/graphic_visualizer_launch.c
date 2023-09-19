@@ -180,11 +180,27 @@ void graphic_visualizer_launch(board_instance_t *board_instance)
 {
     (void)board_instance;
     void *mlx_ptr = mlx_init();
+    if (!mlx_ptr)
+    {
+        ft_log(
+            LOG_LEVEL_FATAL,
+            "mlx_init failed");
+        return;
+    }
     void *win_ptr = mlx_new_window(
         mlx_ptr,
         VISUALIZER_WINDOW_WIDTH,
         VISUALIZER_WINDOW_HEIGHT,
         VISUALIZER_WINDOW_TITLE);
+    if (!win_ptr)
+    {
+        ft_log(
+            LOG_LEVEL_FATAL,
+            "mlx_new_window failed");
+        mlx_destroy_display(mlx_ptr);
+        free(mlx_ptr);
+        return;
+    }
     frame_t frame = frame_init(mlx_ptr, VISUALIZER_WINDOW_WIDTH, VISUALIZER_WINDOW_HEIGHT);
     mlx_t mlx = {
         .board_instance = board_instance,
